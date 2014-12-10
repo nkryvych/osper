@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<mediawiki>
+    <siteinfo>
+        <sitename>name</sitename>
+        <base>base</base>
+        <generator>gene</generator>
+        <case>case</case>
+        <namespaces>
+            <namespace>ns1</namespace>
+            <namespace>ns2</namespace>
+        </namespaces>
+    </siteinfo>
+    <page>
+        <title>title</title>
+        <id>id</id>
+        <revision>
+            <id>id</id>
+            <timestamp>timestamp</timestamp>
+            <contributor>
+                <id>id</id>
+                <username>name</username>
+            </contributor>
+            <text>TEXT</text>
+        </revision>
+    </page>
+    <page>
+        <title>title1</title>
+        <id>id1</id>
+        <revision>
+            <id>id</id>
+            <timestamp>timestamp</timestamp>
+            <contributor>
+                <id>id</id>
+                <username>name</username>
+            </contributor>
+            <text>TEXT</text>
+        </revision>
+    </page>
+</mediawiki>
