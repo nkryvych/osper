@@ -1,4 +1,4 @@
-package ch.epfl.osper.metadata.wikireader;
+package ch.epfl.osper.metadata.wikireader.wikimodel;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 

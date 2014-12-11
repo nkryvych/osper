@@ -17,7 +17,7 @@ import java.util.TimeZone;
 public class JSONWriter {
 
 //    public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-    public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    protected static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     static {
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));

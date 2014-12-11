@@ -1,5 +1,7 @@
-package ch.epfl.osper.metadata.wikireader;
+package ch.epfl.osper.metadata.wikireader.wikimodel;
 
+import ch.epfl.osper.metadata.wikireader.wikimodel.MediaWikiXMLReader;
+import ch.epfl.osper.metadata.wikireader.wikimodel.WikiPage;
 import org.junit.Test;
 
 import java.util.List;
