@@ -8,15 +8,15 @@ public class Location {
     private String id;
     private String title;
 
-    private Coordinates coordinates;
+    private Coordinate coordinate;
 
     private double elevation;
     private String aspect;
 
-    public Location(String id, String title, Coordinates coordinates) {
+    public Location(String id, String title, Coordinate coordinate) {
         this.id = id;
         this.title = title;
-        this.coordinates = coordinates;
+        this.coordinate = coordinate;
     }
 
     public String getId() {
@@ -27,8 +27,8 @@ public class Location {
         return title;
     }
 
-    public Coordinates getCoordinates() {
-        return coordinates;
+    public Coordinate getCoordinate() {
+        return coordinate;
     }
 
     public double getElevation() {

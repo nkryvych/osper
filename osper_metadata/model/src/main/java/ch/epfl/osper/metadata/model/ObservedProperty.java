@@ -40,20 +40,16 @@ public class ObservedProperty {
 
         ObservedProperty that = (ObservedProperty) o;
 
-        if (!columName.equals(that.columName)) return false;
-        if (media != null ? !media.equals(that.media) : that.media != null) return false;
-        if (!name.equals(that.name)) return false;
-        if (unit != null ? !unit.equals(that.unit) : that.unit != null) return false;
+        if (columName != null ? !columName.equals(that.columName) : that.columName != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + (media != null ? media.hashCode() : 0);
-        result = 31 * result + (unit != null ? unit.hashCode() : 0);
-        result = 31 * result + columName.hashCode();
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (columName != null ? columName.hashCode() : 0);
         return result;
     }
 }

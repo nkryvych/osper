@@ -15,14 +15,14 @@ public class Deployment extends Location{
     private Collection<MeasurementLocation> measurementLocations = new HashSet<MeasurementLocation>();
 
 
-    public Deployment(String id, String title, Coordinates coordinates, Date from, Date to, Collection<MeasurementLocation> measurementLocations) {
+    public Deployment(String id, String title, Coordinate coordinates, Date from, Date to, Collection<MeasurementLocation> measurementLocations) {
         super(id, title, coordinates);
         this.dates = new DeploymentPeriod(from, to);
         this.measurementLocations = measurementLocations;
     }
 
-    public Deployment(String id, String title, Coordinates coordinates, Date from, Date to) {
-        super(id, title, coordinates);
+    public Deployment(String id, String title, Coordinate coordinate, Date from, Date to) {
+        super(id, title, coordinate);
         this.dates = new DeploymentPeriod(from, to);
     }
 

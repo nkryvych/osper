@@ -23,14 +23,14 @@ public class MockFactory {
     public static Deployment createDeployment(String name, Date from, Date to, double latitude, double longitude, boolean withData) {
         if (withData) {
             Set<MeasurementLocation> measurementLocations = Sets.newHashSet(
-                    new MeasurementLocation(name + "_ML1", name + "_ML1", new Coordinates(latitude + 0.0001, longitude)),
-                    new MeasurementLocation(name + "_ML2", name + "_ML2", new Coordinates(latitude + 0.0002, longitude))
+                    new MeasurementLocation(name + "_ML1", name + "_ML1", new Coordinate(latitude + 0.0001, longitude)),
+                    new MeasurementLocation(name + "_ML2", name + "_ML2", new Coordinate(latitude + 0.0002, longitude))
             );
 
-            return new Deployment(name, name, new Coordinates(latitude, longitude), from, to, measurementLocations);
+            return new Deployment(name, name, new Coordinate(latitude, longitude), from, to, measurementLocations);
         }
 
-        return new Deployment(name, name, new Coordinates(latitude, longitude), from, to);
+        return new Deployment(name, name, new Coordinate(latitude, longitude), from, to);
     }
 
     public static Deployment createDeployment() {

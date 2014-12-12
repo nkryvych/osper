@@ -22,4 +22,9 @@ public class DeploymentPeriod {
     public Date getTo() {
         return to;
     }
+
+    public void merge(DeploymentPeriod deploymentPeriod) {
+        //ToDo: implement, expand period with new dates.
+        //ToDo: logic for dealing with null and ongoing measurements
+    }
 }

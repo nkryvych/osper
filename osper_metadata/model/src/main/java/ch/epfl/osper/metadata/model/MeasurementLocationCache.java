@@ -14,6 +14,7 @@ public class MeasurementLocationCache {
 
     private Multimap<String, MeasurementRecord> locationToRecords = ArrayListMultimap.create();
 
+
     public String putDBTableForLocation(String locationName, String dbTableName) {
         return locationToDBtable.put(locationName, dbTableName);
     }

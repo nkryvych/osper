@@ -33,7 +33,7 @@ public class JSONWriter {
                 // {"geometry": {"type": "Point", "coordinates": [-94.149, 36.33]}
                 JSONObject point = new JSONObject();
                 // construct a JSONArray from a string; can also use an array or list
-                JSONArray coord = new JSONArray("[" + deployment.getCoordinates().getLongitude() + "," + deployment.getCoordinates().getLatitude() + "]");
+                JSONArray coord = new JSONArray("[" + deployment.getCoordinate().getLongitude() + "," + deployment.getCoordinate().getLatitude() + "]");
                 point.put("coordinates", coord);
 
                 JSONObject feature = new JSONObject();
