@@ -8,6 +8,9 @@ public class Coordinate {
     private double latitude;
     private double longitude;
 
+    public Coordinate() {
+    }
+
     public Coordinate(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
@@ -43,5 +46,13 @@ public class Coordinate {
         temp = Double.doubleToLongBits(longitude);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Coordinate{" +
+                "latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
     }
 }

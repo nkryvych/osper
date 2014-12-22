@@ -11,6 +11,8 @@ public class RevisionXML {
     private String timestamp;
     private ContributorXML contributor;
     private String text;
+    private String comment;
+    private String minor;
 
 
     public RevisionXML(String id, String timestamp, ContributorXML contributor, String text) {
@@ -50,6 +52,22 @@ public class RevisionXML {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getMinor() {
+        return minor;
+    }
+
+    public void setMinor(String minor) {
+        this.minor = minor;
     }
 
     @Override

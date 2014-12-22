@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -26,6 +27,19 @@ public class MediaWikiXMLReader {
 
     }
 
+    public List<WikiPage> parse(InputStream xmlString) {
+        XStream xstream = new XStream(new StaxDriver());
+
+        xstream.processAnnotations(Mediawiki.class);
+        xstream.processAnnotations(SiteInfo.class);
+        xstream.processAnnotations(WikiPage.class);
+        xstream.processAnnotations(Namespaces.class);
+        xstream.processAnnotations(ContributorXML.class);
+        xstream.processAnnotations(RevisionXML.class);
+
+        return ((Mediawiki) xstream.fromXML(xmlString)).getPage();
+
+    }
     public String write() {
         XStream xstream = new XStream(new StaxDriver());
 

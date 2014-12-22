@@ -24,6 +24,10 @@ public class MeasurementRecord {
 
     private Map<String, ObservedProperty> parameterNameToObservedProperty= new HashMap<String, ObservedProperty>();
 
+    private String dbTableName;
+
+    private Location location;
+
     public MeasurementRecord(String id, String measurementLocationId, String serialNumber) {
         this.id = id;
         this.measurementLocationId = measurementLocationId;
@@ -60,6 +64,14 @@ public class MeasurementRecord {
 
     public String getSerialNumber() {
         return serialNumber;
+    }
+
+    public String getDbTableName() {
+        return dbTableName;
+    }
+
+    public void setDbTableName(String dbTableName) {
+        this.dbTableName = dbTableName;
     }
 
     @Override

@@ -11,6 +11,7 @@ public class Location {
     private Coordinate coordinate;
 
     private double elevation;
+    private double slope;
     private String aspect;
 
     public Location(String id, String title, Coordinate coordinate) {
@@ -47,4 +48,11 @@ public class Location {
         this.aspect = aspect;
     }
 
+    public double getSlope() {
+        return slope;
+    }
+
+    public void setSlope(double slope) {
+        this.slope = slope;
+    }
 }

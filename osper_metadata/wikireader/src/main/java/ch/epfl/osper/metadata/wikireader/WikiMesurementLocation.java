@@ -3,6 +3,7 @@ package ch.epfl.osper.metadata.wikireader;
 import ch.epfl.osper.metadata.model.Coordinate;
 import ch.epfl.osper.metadata.wikireader.wikimodel.WikiPage;
 import com.google.common.base.CharMatcher;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by kryvych on 11/12/14.
@@ -29,13 +30,21 @@ public class WikiMesurementLocation extends WikiPageProxy {
             return null;
         }
         String[] coordinateStrings = getPropertyValue("|Coordinates").split(", ");
-        if (coordinateStrings.length != 2) {
+        if (coordinateStrings.length != 2 || StringUtils.isEmpty(coordinateStrings[0]) ||
+                StringUtils.isEmpty(coordinateStrings[1])) {
             logger.info("No valid coordinates specified for MeasurementLocation " + getTitle());
             return null;
         }
 
-        double latitude = parseCoordinate(coordinateStrings[0]);
-        double longitude = parseCoordinate(coordinateStrings[1]);
+        double latitude = 0;
+        double longitude = 0;
+        try {
+            latitude = parseCoordinate(coordinateStrings[0]);
+            longitude = parseCoordinate(coordinateStrings[1]);
+        } catch (NumberFormatException e) {
+            logger.info("No coordinates specified for MeasurementLocation " + getTitle());
+            return null;
+        }
 
         if (coordinateStrings[0].trim().endsWith("S") || coordinateStrings[0].trim().endsWith("s")) {
             latitude *= -1;
@@ -48,7 +57,7 @@ public class WikiMesurementLocation extends WikiPageProxy {
 
     }
 
-    protected double parseCoordinate(String coordinateString) {
+    protected double parseCoordinate(String coordinateString) throws NumberFormatException{
         return Double.parseDouble(DIGIT_MATCHER.retainFrom(coordinateString));
     }
 

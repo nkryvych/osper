@@ -14,6 +14,8 @@ public class MeasurementLocation extends Location {
 
     private String id;
 
+    private String locationName;
+
     private String deploymentName;
 
     private String tableName;
@@ -28,8 +30,9 @@ public class MeasurementLocation extends Location {
     private DeploymentPeriod deploymentPeriod = new DeploymentPeriod(null, null);
 
 
-    public MeasurementLocation(String id, String title, Coordinate coordinate) {
+    public MeasurementLocation(String id, String title, Coordinate coordinate, String locationName) {
         super(id, title, coordinate);
+        this.locationName = locationName;
     }
 
     public String getDeploymentName() {
@@ -48,6 +51,18 @@ public class MeasurementLocation extends Location {
 
     public String getTableName() {
         return tableName;
+    }
+
+    public void setDeploymentName(String deploymentName) {
+        this.deploymentName = deploymentName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public String getLocationName() {
+        return locationName;
     }
 
 }

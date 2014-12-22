@@ -78,6 +78,13 @@ public class WikiMesurementRecord extends WikiPageProxy {
         String[] measuredParameters = getPropertyValue("|MeasuredParameter").split(", ");
         String[] units = getPropertyValue("|Unit").split(", ");
 
+        if (dbParameterNames.length !=  measurementMedias.length
+                || dbParameterNames.length !=  measuredParameters.length
+                || dbParameterNames.length !=  units.length) {
+            logger.info("Cannot create observed properties (not all fields present) for MeasurementRecord " + getTitle());
+            return result;
+        }
+
         for (int i = 0; i < dbParameterNames.length; i++) {
             result.add(new ObservedProperty(measuredParameters[i], measurementMedias[i], units[i], dbParameterNames[i]));
         }
