@@ -11,13 +11,18 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by kryvych on 21/12/14.
  */
+@Named
 public class MeasurementRecordReader {
     protected static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -29,6 +34,7 @@ public class MeasurementRecordReader {
 
     private DBCollection recordCollection;
 
+    @Inject
     public MeasurementRecordReader(MeasurementLocationCache cache, MediaWikiXMLReader wikiXMLReader, DBCollection recordCollection) {
         this.cache = cache;
         this.wikiXMLReader = wikiXMLReader;
@@ -64,6 +70,7 @@ public class MeasurementRecordReader {
                     .append("samplingFreq", record.getSamplingFreq())
                     .append("serialNumber", record.getSerialNo())
                     .append("server", record.getServerName())
+                    .append("dbTableName", record.getDBaseTableName())
                     .append("organisation", record.getOrganization())
                     .append("fromDate", record.getFromDate() != null ? DATE_FORMAT.format(record.getFromDate()) : null)
                     .append("toDate", record.getToDate() != null ? DATE_FORMAT.format(record.getToDate()) : null)
@@ -72,16 +79,16 @@ public class MeasurementRecordReader {
                     .append("location", new BasicDBObject("type", "Point")
                             .append("coordinates", Lists.newArrayList(coordinate.getLatitude(), coordinate.getLongitude())));
 
-            BasicDBList properties = new BasicDBList();
+            Set<String> properties = new HashSet<String>();
             for (ObservedProperty observedProperty : record.getObservedProperties()) {
                 String name = observedProperty.getName();
                 if (StringUtils.isNotEmpty(name)) {
                     properties.add(name);
-                    cache.addObservedProperty(name);
+                    cache.addObservedProperty(observedProperty);
                 }
             }
 
-            document.append("observedProperty", properties);
+            document.append("observedProperty", Lists.newArrayList(properties));
             recordCollection.insert(document);
             count++;
         }

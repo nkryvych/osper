@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
+import javax.inject.Named;
 import java.io.InputStream;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * Created by kryvych on 10/12/14.
  */
 
+@Named
 public class MediaWikiXMLReader {
 
     public List<WikiPage> parse(String xmlString) {

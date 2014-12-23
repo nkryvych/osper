@@ -5,70 +5,69 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
+import javax.inject.Inject;
 import java.net.UnknownHostException;
 import java.util.List;
 
 /**
  * Created by kryvych on 21/12/14.
  */
+@Controller
+@Scope("prototype")
 public class QueryService {
 
-    private MongoDBConfiguration configuration = new MongoDBConfiguration();
+    private MongoDBConfiguration configuration;
 
+    @Inject
     public QueryService(MongoDBConfiguration configuration) {
         this.configuration = configuration;
     }
 
     public String getAllMeasurementRecords() {
-        try {
-            DBCollection collection = configuration.getMeasurementRecordCollection();
 
-            // create an empty query
-            BasicDBObject query = new BasicDBObject();
+        DBCollection collection = configuration.getMeasurementRecordCollection();
 
-            BasicDBObject fields = new BasicDBObject("title", true)
-                    .append("_id", false)
-                    .append("type", true)
-                    .append("mesurementLocation", true)
-                    .append("samplingFreq", true)
-                    .append("serialNumber", true)
-                    .append("fromDate", true)
-                    .append("toDate", true)
-                    .append("server", true)
-                    .append("organisation", true)
-                    .append("slopeAngle", true)
-                    .append("aspect", true)
-                    .append("location", true)
-                    .append("observedProperty", true);
+        // create an empty query
+        BasicDBObject query = new BasicDBObject();
 
-
-            DBCursor cursor = collection.find(query, fields);
+        BasicDBObject fields = new BasicDBObject("title", true)
+                .append("_id", false)
+                .append("type", true)
+                .append("mesurementLocation", true)
+                .append("samplingFreq", true)
+                .append("serialNumber", true)
+                .append("fromDate", true)
+                .append("toDate", true)
+                .append("server", true)
+                .append("dbTableName", true)
+                .append("organisation", true)
+                .append("slopeAngle", true)
+                .append("aspect", true)
+                .append("location", true)
+                .append("observedProperty", true);
 
 
-            StringBuilder resultBuilder = new StringBuilder();
-            resultBuilder.append("[\n");
-            StringBuilder join = Joiner.on(",\n").appendTo(resultBuilder, ((Iterable<DBObject>) cursor)).append("]");
-
-            return join.toString();
+        DBCursor cursor = collection.find(query, fields);
 
 
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            return "CANNOT ACCESS DB";
-        }
+        StringBuilder resultBuilder = new StringBuilder();
+        resultBuilder.append("[\n");
+        StringBuilder join = Joiner.on(",\n").appendTo(resultBuilder, ((Iterable<DBObject>) cursor)).append("]");
+
+        return join.toString();
+
+
     }
 
     public String getAllObservedProperties() {
-        try {
-            DBCollection collection = configuration.getMeasurementRecordCollection();
-            List observedProperty = collection.distinct("observedProperty");
 
-            return "";
+        DBCollection collection = configuration.getMeasurementRecordCollection();
+        List observedProperty = collection.distinct("observedProperty");
 
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            return "CANNOT ACCESS DB";
-        }
+        return "";
+
     }
 }

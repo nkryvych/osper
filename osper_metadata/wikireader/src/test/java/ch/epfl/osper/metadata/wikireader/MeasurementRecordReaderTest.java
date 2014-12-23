@@ -8,7 +8,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -35,7 +34,7 @@ public class MeasurementRecordReaderTest {
         cache = new MeasurementLocationCache();
         wikiXMLReader = new MediaWikiXMLReader();
 
-        locationEnrichmentService = new LocationEnrichmentService();
+        locationEnrichmentService = new LocationEnrichmentService(null);
 
         measurementLocationReader = new MeasurementLocationReader(cache, locationEnrichmentService, wikiXMLReader);
         subject = new MeasurementRecordReader(cache, wikiXMLReader, mongoDBConfiguration.getMeasurementRecordCollection());

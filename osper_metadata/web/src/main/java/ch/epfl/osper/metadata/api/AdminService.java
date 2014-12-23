@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.inject.Inject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -27,52 +28,35 @@ public class AdminService {
 
     private MeasurementRecordReader measurementRecordReader;
 
-    private MeasurementLocationCache cache = new MeasurementLocationCache();
+    @Inject
+    public AdminService(MeasurementLocationReader measurementLocationReader, MeasurementRecordReader measurementRecordReader) {
+        this.measurementLocationReader = measurementLocationReader;
+        this.measurementRecordReader = measurementRecordReader;
+    }
 
-    private MediaWikiXMLReader  wikiXMLReader = new MediaWikiXMLReader();
-
-    private LocationEnrichmentService locationEnrichmentService = new LocationEnrichmentService();
-
-    private MongoDBConfiguration mongoDBConfiguration = new MongoDBConfiguration();
-
-
-//    public AdminService(MeasurementLocationCache cache, MediaWikiXMLReader wikiXMLReader, LocationEnrichmentService locationEnrichmentService, MongoDBConfiguration mongoDBConfiguration) {
-//        this.cache = cache;
-//        this.wikiXMLReader = wikiXMLReader;
-//        this.locationEnrichmentService = locationEnrichmentService;
-//        this.mongoDBConfiguration = mongoDBConfiguration;
-//    }
-
-    @RequestMapping(value="/updateMeasurementLocations", method= RequestMethod.GET)
-    public @ResponseBody
+    @RequestMapping(value = "/updateMeasurementLocations", method = RequestMethod.GET)
+    public
+    @ResponseBody
     String updateMeasurementLocations() throws FileNotFoundException {
 
 
         InputStream fileStream = new FileInputStream("/Users/kryvych/Projects/osper/osper_metadata/wikireader/src/test/resources/MeasurementLocation.xml");
 
-        measurementLocationReader = new MeasurementLocationReader(cache, locationEnrichmentService, wikiXMLReader);
-
         int i = measurementLocationReader.readMeasurementLocations(fileStream);
         return String.valueOf(i);
     }
 
-    @RequestMapping(value="/reloadMeasurementRecords", method= RequestMethod.GET)
-    public @ResponseBody
+    @RequestMapping(value = "/reloadMeasurementRecords", method = RequestMethod.GET)
+    public
+    @ResponseBody
     String reloadMeasurementRecords() throws FileNotFoundException {
 
         updateMeasurementLocations();
 
-        try {
+        InputStream recordStream = new FileInputStream("/Users/kryvych/Projects/osper/osper_metadata/wikireader/src/test/resources/MeasurementRecord.xml");
 
-            measurementRecordReader = new MeasurementRecordReader(cache, wikiXMLReader, mongoDBConfiguration.getMeasurementRecordCollection());
-            InputStream recordStream = new FileInputStream("/Users/kryvych/Projects/osper/osper_metadata/wikireader/src/test/resources/MeasurementRecord.xml");
-
-            int i = measurementRecordReader.readMeasurementRecords(recordStream);
-            return String.valueOf(i);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            return String.valueOf(-1);
-        }
+        int i = measurementRecordReader.readMeasurementRecords(recordStream);
+        return String.valueOf(i);
 
 
     }

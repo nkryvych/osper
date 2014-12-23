@@ -73,9 +73,9 @@ public class WikiMesurementRecord extends WikiPageProxy {
             return result;
         }
 
-        String[] dbParameterNames = getPropertyValue("|DBaseParameterName").split(", ");
-        String[] measurementMedias = getPropertyValue("|MeasurementMedia").split(", ");
-        String[] measuredParameters = getPropertyValue("|MeasuredParameter").split(", ");
+        String[] dbParameterNames = getPropertyValue("|DBaseParameterName").split(",");
+        String[] measurementMedias = getPropertyValue("|MeasurementMedia").split(",");
+        String[] measuredParameters = getPropertyValue("|MeasuredParameter").split(",");
         String[] units = getPropertyValue("|Unit").split(", ");
 
         if (dbParameterNames.length !=  measurementMedias.length
@@ -86,7 +86,8 @@ public class WikiMesurementRecord extends WikiPageProxy {
         }
 
         for (int i = 0; i < dbParameterNames.length; i++) {
-            result.add(new ObservedProperty(measuredParameters[i], measurementMedias[i], units[i], dbParameterNames[i]));
+            result.add(new ObservedProperty(measuredParameters[i].trim(), measurementMedias[i].trim()
+                    , units[i].trim(), dbParameterNames[i].trim()));
         }
 
         return result;

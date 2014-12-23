@@ -6,12 +6,15 @@ import ch.epfl.osper.metadata.model.MeasurementLocationCache;
 import ch.epfl.osper.metadata.wikireader.wikimodel.MediaWikiXMLReader;
 import ch.epfl.osper.metadata.wikireader.wikimodel.WikiPage;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.InputStream;
 import java.util.List;
 
 /**
  * Created by kryvych on 12/12/14.
  */
+@Named
 public class MeasurementLocationReader {
 
     private MeasurementLocationCache cache;
@@ -20,6 +23,7 @@ public class MeasurementLocationReader {
 
     private MediaWikiXMLReader wikiXMLReader;
 
+    @Inject
     public MeasurementLocationReader(MeasurementLocationCache cache, LocationEnrichmentService enrichmentService, MediaWikiXMLReader wikiXMLReader) {
         this.cache = cache;
         this.enrichmentService = enrichmentService;
