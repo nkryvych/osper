@@ -5,7 +5,7 @@ import ch.epfl.osper.metadata.model.MeasurementLocationCache;
 import ch.epfl.osper.metadata.model.MockFactory;
 import ch.epfl.osper.metadata.model.ObservedProperty;
 import ch.epfl.osper.metadata.model.mongodb.MongoDBConfiguration;
-import ch.epfl.osper.metadata.model.mongodb.QueryService;
+import ch.epfl.osper.api.QueryService;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Collections2;
@@ -33,28 +33,18 @@ public class MetadataController {
         this.cache = cache;
     }
 
-    @RequestMapping(value = "/bla", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody
-    String getBla() {
-//        String json = deploymentJSONWriter.writeDeployments(Sets.newHashSet(MockFactory.createDeployment(NAME, FROM, TO, LATITUDE, LONGITUDE, false)));
-        String json = "" +
-                "value = \"/json/experiments\", method = RequestMethod.GET, produces = \"application/json\"";
-        return json;
-    }
-
     @RequestMapping(value="/sensors", method=RequestMethod.POST)
     public @ResponseBody
     String getSensors(@RequestBody Coordinate jo) {
-
-
 
         return jo.toString();
     }
 
     @RequestMapping(value = "/measurementRecords", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    String getMeasurementRecords() {
-        return queryService.getAllMeasurementRecords();
+    String getMeasurementRecords(MeasurementRecordQuery query) {
+        System.out.println("query = " + query);
+        return queryService.getAllMeasurementRecords(query);
     }
 
     @RequestMapping(value = "/observedProperties", method = RequestMethod.GET, produces = "application/json")

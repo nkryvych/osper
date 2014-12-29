@@ -5,6 +5,8 @@ import ch.epfl.osper.metadata.model.MeasurementLocation;
 import ch.epfl.osper.metadata.model.MeasurementLocationCache;
 import ch.epfl.osper.metadata.wikireader.wikimodel.MediaWikiXMLReader;
 import ch.epfl.osper.metadata.wikireader.wikimodel.WikiPage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -16,6 +18,8 @@ import java.util.List;
  */
 @Named
 public class MeasurementLocationReader {
+
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private MeasurementLocationCache cache;
 
@@ -44,9 +48,13 @@ public class MeasurementLocationReader {
                 location.setDeploymentName(wikiLocation.getDeployment());
                 cache.putLocation(location);
                 count++;
+                if ((count % 100) == 0) {
+                   logger.info("Processed " + count + " measurement records");
+                }
+
+
             }
         }
-
 
         return count;
     }

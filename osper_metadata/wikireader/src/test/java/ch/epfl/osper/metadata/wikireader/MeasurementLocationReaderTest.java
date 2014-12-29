@@ -1,13 +1,22 @@
 package ch.epfl.osper.metadata.wikireader;
 
+import ch.epfl.osper.metadata.model.Location;
 import ch.epfl.osper.metadata.model.MeasurementLocationCache;
 import ch.epfl.osper.metadata.wikireader.wikimodel.MediaWikiXMLReader;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
+@RunWith(MockitoJUnitRunner.class)
 public class MeasurementLocationReaderTest {
 
     private MeasurementLocationReader subject;
@@ -16,7 +25,8 @@ public class MeasurementLocationReaderTest {
 
     private MediaWikiXMLReader wikiXMLReader;
 
-    private LocationEnrichmentService locationEnrichmentService;
+    @Mock
+    private LocationEnrichmentService locationEnrichmentServiceMock;
 
 
     @Before
@@ -24,9 +34,9 @@ public class MeasurementLocationReaderTest {
         cache = new MeasurementLocationCache();
         wikiXMLReader = new MediaWikiXMLReader();
 
-        locationEnrichmentService = new LocationEnrichmentService();
+        when(locationEnrichmentServiceMock.addExtraInfo(any(Location.class))).thenReturn(true);
 
-        subject = new MeasurementLocationReader(cache, locationEnrichmentService, wikiXMLReader);
+        subject = new MeasurementLocationReader(cache, locationEnrichmentServiceMock, wikiXMLReader);
     }
 
     @Test

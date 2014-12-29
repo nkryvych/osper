@@ -76,6 +76,7 @@ public class MeasurementRecordReader {
                     .append("toDate", record.getToDate() != null ? DATE_FORMAT.format(record.getToDate()) : null)
                     .append("slopeAngle", location.getSlope())
                     .append("aspect", location.getAspect())
+                    .append("elevation", location.getElevation())
                     .append("location", new BasicDBObject("type", "Point")
                             .append("coordinates", Lists.newArrayList(coordinate.getLatitude(), coordinate.getLongitude())));
 
