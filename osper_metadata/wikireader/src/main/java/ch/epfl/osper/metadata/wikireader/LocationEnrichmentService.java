@@ -45,18 +45,19 @@ public class LocationEnrichmentService {
 
 
     public boolean addExtraInfo(Location location) {
-        String url = MessageFormat.format(COORDINATES_URL, location.getCoordinate().getLongitude(), location.getCoordinate().getLatitude());
+//        String url = MessageFormat.format(COORDINATES_URL, location.getCoordinate().getLongitude(), location.getCoordinate().getLatitude());
+//
+//        try {
+//            String result = restTemplate.getForObject(url, String.class);
+//            parseResult(result, location);
+//            return true;
+//
+//        } catch (RestClientException | ParserConfigurationException | SAXException | IOException e) {
+//            logger.error("Cannot get extra information for location ", e);
+//            return false;
+//        }
 
-        try {
-            String result = restTemplate.getForObject(url, String.class);
-            parseResult(result, location);
-            return true;
-
-        } catch (RestClientException | ParserConfigurationException | SAXException | IOException e) {
-            logger.error("Cannot get extra information for location ", e);
-            return false;
-        }
-
+        return false;
     }
 
     protected void parseResult(String xmlString, Location location) throws ParserConfigurationException, IOException, SAXException {

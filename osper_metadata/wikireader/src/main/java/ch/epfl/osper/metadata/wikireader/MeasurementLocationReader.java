@@ -49,7 +49,7 @@ public class MeasurementLocationReader {
                 cache.putLocation(location);
                 count++;
                 if ((count % 100) == 0) {
-                   logger.info("Processed " + count + " measurement records");
+                   logger.info("Processed " + count + " measurement locations");
                 }
 
 

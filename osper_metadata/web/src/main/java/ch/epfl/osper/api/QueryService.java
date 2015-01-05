@@ -12,8 +12,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import javax.inject.Inject;
-import java.net.UnknownHostException;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,7 +36,7 @@ public class QueryService {
         BasicDBObject fields = new BasicDBObject("title", true)
                 .append("_id", false)
                 .append("type", true)
-                .append("mesurementLocation", true)
+                .append("measurementLocation", true)
                 .append("samplingFreq", true)
                 .append("serialNumber", true)
                 .append("fromDate", true)
@@ -67,8 +65,8 @@ public class QueryService {
 
     protected BasicDBObject buildDBQuery(MeasurementRecordQuery recordQuery) {
         BasicDBObject query = new BasicDBObject();
-        if (StringUtils.isNotEmpty(recordQuery.getLocationName())) {
-            query.append("mesurementLocation", recordQuery.getLocationName());
+        if (StringUtils.isNotEmpty(recordQuery.getMeasurementLocationName())) {
+            query.append("measurementLocation", recordQuery.getMeasurementLocationName());
         }
         if (!recordQuery.getProperties().isEmpty()) {
             query.append("observedProperty", new BasicDBObject("$in", Lists.newArrayList(recordQuery.getProperties())));
@@ -76,6 +74,12 @@ public class QueryService {
         if (recordQuery.hasValidBoundingBox()) {
             query.append("location", new BasicDBObject("$within",
                     new BasicDBObject("$box", recordQuery.getBox())));
+        }
+        if (recordQuery.hasValidFromDate()) {
+            query.append("fromDate", new BasicDBObject("$gte", recordQuery.getFromDateParsed()));
+        }
+        if (recordQuery.hasValidToDate()) {
+            query.append("toDate", new BasicDBObject("$lte", recordQuery.getToDateParsed()));
         }
 
         return query;

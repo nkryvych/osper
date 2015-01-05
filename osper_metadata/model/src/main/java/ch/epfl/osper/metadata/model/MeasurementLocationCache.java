@@ -18,9 +18,9 @@ import java.util.Set;
 @Named
 @Scope("singleton")
 public class MeasurementLocationCache {
-    private Map<String, String> locationToDBtable = Maps.newHashMap();
-
-    private Multimap<String, MeasurementRecord> locationToRecords = ArrayListMultimap.create();
+//    private Map<String, String> locationToDBtable = Maps.newHashMap();
+//
+//    private Multimap<String, MeasurementRecord> locationToRecords = ArrayListMultimap.create();
 
     private Map<String, MeasurementLocation> locationNameToLocation = Maps.newHashMap();
 
@@ -29,13 +29,13 @@ public class MeasurementLocationCache {
     private Map<String, ObservedProperty> nameToProperty = Maps.newHashMap();
 
 
-    public String putDBTableForLocation(String locationName, String dbTableName) {
-        return locationToDBtable.put(locationName, dbTableName);
-    }
-
-    public boolean putMeasurementRecordForLocation(String locationName, MeasurementRecord measurementRecord) {
-        return locationToRecords.put(locationName, measurementRecord);
-    }
+//    public String putDBTableForLocation(String locationName, String dbTableName) {
+//        return locationToDBtable.put(locationName, dbTableName);
+//    }
+//
+//    public boolean putMeasurementRecordForLocation(String locationName, MeasurementRecord measurementRecord) {
+//        return locationToRecords.put(locationName, measurementRecord);
+//    }
 
     public Location putLocation(MeasurementLocation location) {
         return locationNameToLocation.put(location.getLocationName(), location);
@@ -45,9 +45,9 @@ public class MeasurementLocationCache {
         return locationNameToLocation.get(locationName);
     }
 
-    public void addObservedProperty(String observedProperty) {
-        observedProperties.add(observedProperty);
-    }
+//    public void addObservedProperty(String observedProperty) {
+//        observedProperties.add(observedProperty);
+//    }
 
     public void addObservedProperty(ObservedProperty observedProperty) {
         observedProperties.add(observedProperty.getName());

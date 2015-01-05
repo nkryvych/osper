@@ -66,14 +66,14 @@ public class MeasurementRecordReader {
 
             BasicDBObject document = new BasicDBObject("title", record.getTitle())
                     .append("type", "MeasurementRecord")
-                    .append("mesurementLocation", record.getLocation())
+                    .append("measurementLocation", record.getLocation())
                     .append("samplingFreq", record.getSamplingFreq())
                     .append("serialNumber", record.getSerialNo())
                     .append("server", record.getServerName())
                     .append("dbTableName", record.getDBaseTableName())
                     .append("organisation", record.getOrganization())
-                    .append("fromDate", record.getFromDate() != null ? DATE_FORMAT.format(record.getFromDate()) : null)
-                    .append("toDate", record.getToDate() != null ? DATE_FORMAT.format(record.getToDate()) : null)
+                    .append("fromDate", record.getFromDate() != null ? record.getFromDate() : null)
+                    .append("toDate", record.getToDate() != null ? record.getToDate() : null)
                     .append("slopeAngle", location.getSlope())
                     .append("aspect", location.getAspect())
                     .append("elevation", location.getElevation())
@@ -92,6 +92,9 @@ public class MeasurementRecordReader {
             document.append("observedProperty", Lists.newArrayList(properties));
             recordCollection.insert(document);
             count++;
+            if ((count % 500) == 0) {
+                logger.info("Processed " + count + " measurement records");
+            }
         }
 
 
