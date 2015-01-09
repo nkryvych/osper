@@ -1,11 +1,18 @@
 package ch.epfl.osper.metadata.model;
 
+import org.springframework.data.annotation.Id;
+
+import java.math.BigInteger;
+
 /**
  * Created by kryvych on 01/12/14.
  */
-public class Location {
+public class MapLocation {
 
-    private String id;
+    @Id
+    private BigInteger id;
+
+    private String wikiId;
     private String title;
 
     private Coordinate coordinate;
@@ -14,14 +21,14 @@ public class Location {
     private double slope;
     private String aspect;
 
-    public Location(String id, String title, Coordinate coordinate) {
-        this.id = id;
+    public MapLocation(String wikiId, String title, Coordinate coordinate) {
+        this.wikiId = wikiId;
         this.title = title;
         this.coordinate = coordinate;
     }
 
-    public String getId() {
-        return id;
+    public String getWikiId() {
+        return wikiId;
     }
 
     public String getTitle() {
@@ -54,5 +61,13 @@ public class Location {
 
     public void setSlope(double slope) {
         this.slope = slope;
+    }
+
+    public BigInteger getId() {
+        return id;
+    }
+
+    public void setId(BigInteger id) {
+        this.id = id;
     }
 }

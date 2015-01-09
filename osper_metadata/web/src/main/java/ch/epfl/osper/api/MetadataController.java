@@ -1,20 +1,19 @@
 package ch.epfl.osper.api;
 
 import ch.epfl.osper.metadata.model.Coordinate;
+import ch.epfl.osper.metadata.model.MeasurementLocation;
 import ch.epfl.osper.metadata.model.MeasurementLocationCache;
-import ch.epfl.osper.metadata.model.MockFactory;
 import ch.epfl.osper.metadata.model.ObservedProperty;
-import ch.epfl.osper.metadata.model.mongodb.MongoDBConfiguration;
-import ch.epfl.osper.api.QueryService;
+import ch.epfl.osper.metadata.services.MeasurementLocationService;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.Sets;
+import com.google.gson.Gson;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by kryvych on 24/11/14.
@@ -27,10 +26,13 @@ public class MetadataController {
 
     private MeasurementLocationCache cache;
 
+    private MeasurementLocationService measurementLocationService;
+
     @Inject
-    public MetadataController(QueryService queryService, MeasurementLocationCache cache) {
+    public MetadataController(QueryService queryService, MeasurementLocationCache cache, MeasurementLocationService measurementLocationService) {
         this.queryService = queryService;
         this.cache = cache;
+        this.measurementLocationService = measurementLocationService;
     }
 
     @RequestMapping(value="/sensors", method=RequestMethod.POST)
@@ -45,6 +47,21 @@ public class MetadataController {
     String getMeasurementRecords(MeasurementRecordQuery query) {
         System.out.println("query = " + query);
         return queryService.getAllMeasurementRecords(query);
+    }
+
+    @RequestMapping(value = "/measurementLocations", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody
+    String getMeasurementLocations(MeasurementRecordQuery query) {
+        System.out.println("query = " + query);
+        if (query.hasValidBoundingBox()) {
+            List<MeasurementLocation> result = measurementLocationService.findLocationPointsWithinBox(query.getBoundingBox());
+//            List<MeasurementLocation> result = measurementLocationService.findLocationsWithinBox(query.getBoxAsArray());
+
+            Gson gson = new Gson();
+
+            return gson.toJson(result);
+        }
+        return "Wrong query";
     }
 
     @RequestMapping(value = "/observedProperties", method = RequestMethod.GET, produces = "application/json")

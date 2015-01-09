@@ -7,7 +7,7 @@ import java.util.HashSet;
 /**
  * Created by kryvych on 24/11/14.
  */
-public class Deployment extends Location{
+public class Deployment extends MapLocation {
 
 
     private DeploymentPeriod dates;

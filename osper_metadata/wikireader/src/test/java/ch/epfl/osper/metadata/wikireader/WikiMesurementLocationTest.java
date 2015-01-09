@@ -70,6 +70,17 @@ public class WikiMesurementLocationTest {
     }
 
     @Test
+    public void testNoWhitespaceInCoordinates() throws Exception {
+
+        when(revisionXMLMock.getText()).thenReturn("|Coordinates = 46.10537918° N,7.270517947° E");
+        when(wikiPageMock.getRevision()).thenReturn(revisionXMLMock);
+
+        subject = new WikiMesurementLocation(wikiPageMock);
+
+        assertThat(subject.getCoordinates(), is(new Coordinate(46.10537918, 7.270517947)));
+    }
+
+    @Test
     public void testLocation() throws Exception {
         assertThat(subject.getLocation(), is("wan7"));
     }

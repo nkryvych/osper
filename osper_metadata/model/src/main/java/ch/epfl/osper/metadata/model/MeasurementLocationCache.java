@@ -1,8 +1,6 @@
 package ch.epfl.osper.metadata.model;
 
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import org.springframework.context.annotation.Scope;
 
@@ -37,7 +35,7 @@ public class MeasurementLocationCache {
 //        return locationToRecords.put(locationName, measurementRecord);
 //    }
 
-    public Location putLocation(MeasurementLocation location) {
+    public MeasurementLocation putLocation(MeasurementLocation location) {
         return locationNameToLocation.put(location.getLocationName(), location);
     }
 

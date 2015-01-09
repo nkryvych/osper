@@ -2,6 +2,8 @@ package ch.epfl.osper.api;
 
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.data.geo.Box;
+import org.springframework.data.geo.Point;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,11 +49,15 @@ public class MeasurementRecordQuery {
     }
 
 
-    public List<double[]> getBox() {
+    public List<double[]> getBoxAsArray() {
         List<double[]> box = new ArrayList<>();
         box.add(new double[]{minLat, minLon}); //Starting coordinate
         box.add(new double[]{maxLat, maxLon}); // Ending coordinate
         return box;
+    }
+
+    public Box getBoundingBox() {
+        return new Box(new Point(minLat, minLon), new Point(maxLat, maxLon));
     }
 
     public String getToDate() {

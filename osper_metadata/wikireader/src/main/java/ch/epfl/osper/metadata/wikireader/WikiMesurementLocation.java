@@ -29,9 +29,9 @@ public class WikiMesurementLocation extends WikiPageProxy {
             logger.info("No coordinates specified for MeasurementLocation " + getTitle());
             return null;
         }
-        String[] coordinateStrings = getPropertyValue("|Coordinates").split(", ");
-        if (coordinateStrings.length != 2 || StringUtils.isEmpty(coordinateStrings[0]) ||
-                StringUtils.isEmpty(coordinateStrings[1])) {
+        String[] coordinateStrings = getPropertyValue("|Coordinates").split(",");
+        if (coordinateStrings.length != 2 || StringUtils.isEmpty(coordinateStrings[1]) ||
+                StringUtils.isEmpty(coordinateStrings[0])) {
             logger.info("No valid coordinates specified for MeasurementLocation " + getTitle());
             return null;
         }
@@ -39,8 +39,8 @@ public class WikiMesurementLocation extends WikiPageProxy {
         double latitude = 0;
         double longitude = 0;
         try {
-            latitude = parseCoordinate(coordinateStrings[0]);
-            longitude = parseCoordinate(coordinateStrings[1]);
+            latitude = parseCoordinate(coordinateStrings[0].trim());
+            longitude = parseCoordinate(coordinateStrings[1].trim());
         } catch (NumberFormatException e) {
             logger.info("No coordinates specified for MeasurementLocation " + getTitle());
             return null;
@@ -55,6 +55,11 @@ public class WikiMesurementLocation extends WikiPageProxy {
         }
         return new Coordinate(latitude, longitude);
 
+    }
+
+    public double[] getLocationPoint() {
+        Coordinate coordinates = getCoordinates();
+        return new double[] {coordinates.getLatitude(), coordinates.getLongitude()};
     }
 
     protected double parseCoordinate(String coordinateString) throws NumberFormatException{

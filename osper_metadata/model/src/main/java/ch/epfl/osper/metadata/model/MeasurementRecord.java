@@ -1,98 +1,186 @@
 package ch.epfl.osper.metadata.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+
+import java.math.BigInteger;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
 
 /**
  * Created by kryvych on 01/12/14.
  */
 public class MeasurementRecord {
-    private String id;
+    @Id
+    private BigInteger id;
 
-    private String measurementLocationId;
+    private String wikiId;
+
+    private String measurementLocationName;
+
+    @DBRef
+    private MeasurementLocation measurementLocation;
 
     private String serialNumber;
 
-    private DeploymentPeriod deploymentDates;
-
+    private Date fromDate;
+    private Date toDate;
     private String samplingFrequency;
 
-    private String experimentalMethod;
+    private String server;
+    private String organisation;
 
     private Collection<ObservedProperty> observedProperties;
 
-    private Map<String, ObservedProperty> parameterNameToObservedProperty= new HashMap<String, ObservedProperty>();
-
     private String dbTableName;
 
-    private Location location;
 
-    public MeasurementRecord(String id, String measurementLocationId, String serialNumber) {
-        this.id = id;
-        this.measurementLocationId = measurementLocationId;
+    private MeasurementRecord(String wikiId, String measurementLocationName, String serialNumber, Date fromDate, Date toDate, String samplingFrequency, String server, String organisation, Collection<ObservedProperty> observedProperties, String dbTableName) {
+        this.wikiId = wikiId;
+        this.measurementLocationName = measurementLocationName;
         this.serialNumber = serialNumber;
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+        this.samplingFrequency = samplingFrequency;
+        this.server = server;
+        this.organisation = organisation;
+        this.observedProperties = observedProperties;
+        this.dbTableName = dbTableName;
     }
 
-    public String getId() {
+    private MeasurementRecord() {
+    }
+
+    public static Builder getBuilder() {
+        return new Builder();
+    }
+
+    public BigInteger getId() {
         return id;
     }
 
-    public String getMeasurementLocationId() {
-        return measurementLocationId;
+    public String getWikiId() {
+        return wikiId;
     }
 
-    public DeploymentPeriod getDeploymentDates() {
-        return deploymentDates;
+    public String getMeasurementLocationName() {
+        return measurementLocationName;
     }
 
-    public Collection<ObservedProperty> getObservedProperties() {
-        return observedProperties;
-    }
-
-    public Collection<String> getObservedPropertyNames() {
-        return parameterNameToObservedProperty.keySet();
-    }
-
-    public String getSamplingFrequency() {
-        return samplingFrequency;
-    }
-
-    public String getExperimentalMethod() {
-        return experimentalMethod;
+    public MeasurementLocation getMeasurementLocation() {
+        return measurementLocation;
     }
 
     public String getSerialNumber() {
         return serialNumber;
     }
 
+    public String getSamplingFrequency() {
+        return samplingFrequency;
+    }
+
+    public String getServer() {
+        return server;
+    }
+
+    public String getOrganisation() {
+        return organisation;
+    }
+
+    public Collection<ObservedProperty> getObservedProperties() {
+        return observedProperties;
+    }
+
     public String getDbTableName() {
         return dbTableName;
     }
 
-    public void setDbTableName(String dbTableName) {
-        this.dbTableName = dbTableName;
+    public Date getFromDate() {
+        return fromDate;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MeasurementRecord that = (MeasurementRecord) o;
-
-        if (!measurementLocationId.equals(that.measurementLocationId)) return false;
-        if (!observedProperties.equals(that.observedProperties)) return false;
-        if (serialNumber != null ? !serialNumber.equals(that.serialNumber) : that.serialNumber != null) return false;
-
-        return true;
+    public Date getToDate() {
+        return toDate;
     }
 
-    @Override
-    public int hashCode() {
-        int result = measurementLocationId.hashCode();
-        result = 31 * result + (serialNumber != null ? serialNumber.hashCode() : 0);
-        result = 31 * result + observedProperties.hashCode();
-        return result;
+    public void setId(BigInteger id) {
+        this.id = id;
+    }
+
+    public void setMeasurementLocation(MeasurementLocation measurementLocation) {
+        this.measurementLocation = measurementLocation;
+    }
+
+    public static class Builder {
+        private String wikiId;
+        private String measurementLocationName;
+        private String serialNumber;
+        private DeploymentPeriod deploymentDates;
+        private String samplingFrequency;
+        private String server;
+        private String organisation;
+        private Collection<ObservedProperty> observedProperties;
+        private String dbTableName;
+        private Date fromDate;
+        private Date toDate;
+
+        public Builder wikiId(String wikiId) {
+            this.wikiId = wikiId;
+            return this;
+        }
+
+        public Builder measurementLocatioName(String measurementLocationId) {
+            this.measurementLocationName = measurementLocationId;
+            return this;
+        }
+
+        public Builder serialNumber(String serialNumber) {
+            this.serialNumber = serialNumber;
+            return this;
+        }
+
+        public Builder deploymentDates(DeploymentPeriod deploymentDates) {
+            this.deploymentDates = deploymentDates;
+            return this;
+        }
+
+        public Builder samplingFrequency(String samplingFrequency) {
+            this.samplingFrequency = samplingFrequency;
+            return this;
+        }
+
+        public Builder server(String server) {
+            this.server = server;
+            return this;
+        }
+
+        public Builder organisation(String organisation) {
+            this.organisation = organisation;
+            return this;
+        }
+
+        public Builder observedProperties(Collection<ObservedProperty> observedProperties) {
+            this.observedProperties = observedProperties;
+            return this;
+        }
+
+        public Builder dbTableName(String dbTableName) {
+            this.dbTableName = dbTableName;
+            return this;
+        }
+
+        public Builder fromDate(Date fromDate) {
+            this.fromDate = fromDate;
+            return this;
+        }
+
+        public Builder toDate(Date toDate) {
+            this.toDate = toDate;
+            return this;
+        }
+
+        public MeasurementRecord createMeasurementRecord() {
+            return new MeasurementRecord(wikiId, measurementLocationName, serialNumber, fromDate, toDate, samplingFrequency, server, organisation, observedProperties, dbTableName);
+        }
     }
 }

@@ -37,6 +37,7 @@ public class QueryService {
                 .append("_id", false)
                 .append("type", true)
                 .append("measurementLocation", true)
+                .append("measurementLocationTitle", true)
                 .append("samplingFreq", true)
                 .append("serialNumber", true)
                 .append("fromDate", true)
@@ -73,7 +74,7 @@ public class QueryService {
         }
         if (recordQuery.hasValidBoundingBox()) {
             query.append("location", new BasicDBObject("$within",
-                    new BasicDBObject("$box", recordQuery.getBox())));
+                    new BasicDBObject("$box", recordQuery.getBoxAsArray())));
         }
         if (recordQuery.hasValidFromDate()) {
             query.append("fromDate", new BasicDBObject("$gte", recordQuery.getFromDateParsed()));
