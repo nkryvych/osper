@@ -18,6 +18,8 @@ public interface MeasurementLocationRepository extends CrudRepository<Measuremen
 
     List<MeasurementLocation> findByLocationPointWithin(Box b);
 
+    MeasurementLocation findByLocationName(String locationName);
 
+    MeasurementLocation findByDeploymentName(String deploymentName);
 
 }

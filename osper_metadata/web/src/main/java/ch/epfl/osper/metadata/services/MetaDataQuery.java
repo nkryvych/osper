@@ -1,6 +1,7 @@
-package ch.epfl.osper.api;
+package ch.epfl.osper.metadata.services;
 
 
+import com.google.common.collect.Sets;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.data.geo.Box;
 import org.springframework.data.geo.Point;
@@ -12,12 +13,12 @@ import java.util.*;
 /**
  * Created by kryvych on 17/12/14.
  */
-public class MeasurementRecordQuery {
+public class MetaDataQuery {
 
     protected static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     private String measurementLocationName;
-    private Set<String> observedProperties;
+    private Set<String> observedProperties = Sets.newHashSet();
     private String fromDate;
     private String toDate;
     private double minLat = Double.NaN;
@@ -25,7 +26,6 @@ public class MeasurementRecordQuery {
     private double maxLat = Double.NaN;
     private double maxLon = Double.NaN;
 
-    private Set<String> properties = new HashSet<>();
     private Date fromDateParsed;
     private Date toDateParsed;
 
@@ -85,16 +85,9 @@ public class MeasurementRecordQuery {
         this.observedProperties = observedProperties;
     }
 
-    public Set<String> getProperties() {
-        return properties;
-    }
 
     public boolean hasValidBoundingBox() {
         return !Double.isNaN(minLat) && !Double.isNaN(minLon) && !Double.isNaN(maxLat) && !Double.isNaN(maxLon);
-    }
-
-    public void setProperties(Set<String> properties) {
-        this.properties = properties;
     }
 
     public String getMeasurementLocationName() {
@@ -106,7 +99,7 @@ public class MeasurementRecordQuery {
     }
 
     public boolean hasValidFromDate() {
-        if(StringUtils.isNotEmpty(fromDate)) {
+        if (StringUtils.isNotEmpty(fromDate)) {
             try {
                 fromDateParsed = DATE_FORMAT.parse(fromDate);
                 return true;
@@ -118,7 +111,7 @@ public class MeasurementRecordQuery {
     }
 
     public boolean hasValidToDate() {
-        if(StringUtils.isNotEmpty(toDate)) {
+        if (StringUtils.isNotEmpty(toDate)) {
             try {
                 toDateParsed = DATE_FORMAT.parse(toDate);
                 return true;
@@ -148,7 +141,6 @@ public class MeasurementRecordQuery {
                 ", minLon=" + minLon +
                 ", maxLat=" + maxLat +
                 ", maxLon=" + maxLon +
-                ", properties=" + properties +
                 '}';
     }
 }

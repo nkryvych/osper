@@ -1,20 +1,23 @@
 package ch.epfl.osper.metadata.model;
 
+import org.springframework.data.mongodb.core.index.TextIndexed;
+
 /**
  * Created by kryvych on 01/12/14.
  */
 public class ObservedProperty {
 
+    @TextIndexed
     private String name;
     private String media;
     private String unit;
-    private String columName;
+    private String columnName;
 
-    public ObservedProperty(String name, String media, String unit, String columName) {
+    public  ObservedProperty(String name, String media, String unit, String columnName) {
         this.name = name;
         this.media = media;
         this.unit = unit;
-        this.columName = columName;
+        this.columnName = columnName;
     }
 
     public String getName() {
@@ -29,8 +32,8 @@ public class ObservedProperty {
         return unit;
     }
 
-    public String getColumName() {
-        return columName;
+    public String getColumnName() {
+        return columnName;
     }
 
     @Override
@@ -40,7 +43,7 @@ public class ObservedProperty {
 
         ObservedProperty that = (ObservedProperty) o;
 
-        if (columName != null ? !columName.equals(that.columName) : that.columName != null) return false;
+        if (columnName != null ? !columnName.equals(that.columnName) : that.columnName != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
 
         return true;
@@ -49,7 +52,7 @@ public class ObservedProperty {
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (columName != null ? columName.hashCode() : 0);
+        result = 31 * result + (columnName != null ? columnName.hashCode() : 0);
         return result;
     }
 }

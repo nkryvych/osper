@@ -1,14 +1,10 @@
-package ch.epfl.osper.metadata.api;
+package ch.epfl.osper.metadata.rest;
 
 import ch.epfl.osper.metadata.model.MeasurementLocation;
 import ch.epfl.osper.metadata.model.MeasurementRecord;
-import ch.epfl.osper.metadata.model.mongodb.MongoDBConfiguration;
-import ch.epfl.osper.metadata.model.MeasurementLocationCache;
-import ch.epfl.osper.metadata.services.MeasurementLocationService;
-import ch.epfl.osper.metadata.wikireader.LocationEnrichmentService;
+import ch.epfl.osper.metadata.services.PersistenceService;
 import ch.epfl.osper.metadata.wikireader.MeasurementLocationReader;
 import ch.epfl.osper.metadata.wikireader.MeasurementRecordReader;
-import ch.epfl.osper.metadata.wikireader.wikimodel.MediaWikiXMLReader;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,7 +14,6 @@ import javax.inject.Inject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.UnknownHostException;
 import java.util.Set;
 
 /**
@@ -32,12 +27,12 @@ public class AdminService {
 
     private MeasurementRecordReader measurementRecordReader;
 
-    private MeasurementLocationService measurementLocationService;
+    private PersistenceService persistenceService;
     @Inject
-    public AdminService(MeasurementLocationReader measurementLocationReader, MeasurementRecordReader measurementRecordReader, MeasurementLocationService measurementLocationService) {
+    public AdminService(MeasurementLocationReader measurementLocationReader, MeasurementRecordReader measurementRecordReader, PersistenceService persistenceService) {
         this.measurementLocationReader = measurementLocationReader;
         this.measurementRecordReader = measurementRecordReader;
-        this.measurementLocationService = measurementLocationService;
+        this.persistenceService = persistenceService;
     }
 
     @RequestMapping(value = "/updateMeasurementLocations", method = RequestMethod.GET)
@@ -50,7 +45,7 @@ public class AdminService {
         InputStream fileStream = new FileInputStream("/Users/kryvych/Projects/osper/osper_metadata/wikireader/src/test/resources/MeasurementLocation.xml");
 
         Set<MeasurementLocation> measurementLocations = measurementLocationReader.readMeasurementLocations(fileStream);
-        measurementLocationService.writeMeasurementLocations(measurementLocations);
+        persistenceService.writeMeasurementLocations(measurementLocations);
 
         return String.valueOf(measurementLocations.size());
     }
@@ -60,12 +55,13 @@ public class AdminService {
     @ResponseBody
     String reloadMeasurementRecords() throws FileNotFoundException {
         System.out.println("AdminService.reloadMeasurementRecords");
-        updateMeasurementLocations();
+//        updateMeasurementLocations();
 
         InputStream recordStream = new FileInputStream("/Users/kryvych/Projects/osper/osper_metadata/wikireader/src/test/resources/MeasurementRecord.xml");
 
-        Set<MeasurementRecord> i = measurementRecordReader.parseMeasurementRecords(recordStream);
-        return String.valueOf(i.size());
+        Set<MeasurementRecord> records = measurementRecordReader.parseMeasurementRecords(recordStream);
+        persistenceService.writeMeasurementRecords(records);
+        return String.valueOf(records.size());
 
 
     }

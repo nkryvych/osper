@@ -1,13 +1,9 @@
 package ch.epfl.osper.metadata.wikireader;
 
-import ch.epfl.osper.metadata.model.*;
+import ch.epfl.osper.metadata.model.MeasurementRecord;
 import ch.epfl.osper.metadata.wikireader.wikimodel.MediaWikiXMLReader;
 import ch.epfl.osper.metadata.wikireader.wikimodel.WikiPage;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,8 +11,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -114,6 +108,7 @@ public class MeasurementRecordReader {
             }
 
             MeasurementRecord measurementRecord = MeasurementRecord.getBuilder().measurementLocatioName(record.getLocation())
+                    .title(record.getTitle())
                     .samplingFrequency(record.getSamplingFreq())
                     .serialNumber(record.getSerialNo())
                     .server(record.getServerName())

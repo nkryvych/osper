@@ -43,7 +43,7 @@ public class LocationEnrichmentService {
 
 
     public boolean addExtraInfo(MeasurementLocation location) {
-        String url = MessageFormat.format(COORDINATES_URL, location.getLocation()[0], location.getLocation()[1]);
+        String url = MessageFormat.format(COORDINATES_URL, location.getLocationPoint().getY(), location.getLocationPoint().getX());
 
         try {
             String result = restTemplate.getForObject(url, String.class);

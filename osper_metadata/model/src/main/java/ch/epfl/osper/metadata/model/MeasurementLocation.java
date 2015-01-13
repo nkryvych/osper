@@ -1,7 +1,9 @@
 package ch.epfl.osper.metadata.model;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.geo.Point;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigInteger;
@@ -14,7 +16,9 @@ import java.util.Arrays;
 public class MeasurementLocation {
 
     @Id
-    private BigInteger id;
+//    private BigInteger id;
+
+    private ObjectId id;
 
     private String wikiId;
     private String title;
@@ -24,6 +28,8 @@ public class MeasurementLocation {
     private String deploymentName;
 
     private double[] location;
+
+    @GeoSpatialIndexed
     private Point locationPoint;
     private double elevation;
     private double slope;
@@ -47,7 +53,7 @@ public class MeasurementLocation {
         return new Builder();
     }
 
-    public BigInteger getId() {
+    public ObjectId getId() {
         return id;
     }
 

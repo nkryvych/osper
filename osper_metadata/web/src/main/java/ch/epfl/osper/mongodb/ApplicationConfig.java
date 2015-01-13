@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
  * Created by kryvych on 08/01/15.
  */
 @Configuration
-@EnableMongoRepositories
+@EnableMongoRepositories(basePackages = "ch.epfl.osper.mongodb")
 class ApplicationConfig extends AbstractMongoConfiguration {
     @Override
     protected String getDatabaseName() {

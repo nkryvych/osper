@@ -52,7 +52,7 @@ public class MeasurementLocationReader {
                         .locationName(wikiLocation.getLocation())
                         .createMeasurementLocation();
 
-//                enrichmentService.addExtraInfo(location);
+                enrichmentService.addExtraInfo(location);
                 result.add(location);
                 count++;
                 if ((count % 100) == 0) {
