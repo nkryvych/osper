@@ -54,8 +54,8 @@ public class LocationEnrichmentService {
             logger.error("Cannot get extra information for location ", e);
             return false;
         }
-
 //        return false;
+
 
     }
 

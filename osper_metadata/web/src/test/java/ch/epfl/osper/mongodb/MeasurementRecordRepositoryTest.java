@@ -25,19 +25,19 @@ public class MeasurementRecordRepositoryTest {
     @Test
     public void findByservedPropertiesTest() throws Exception {
         List<MeasurementRecord> result = repository.findByObservedPropertyNames(Lists.newArrayList("Wind Speed (Westerly)"));
-        assertThat(result.size(), is(8));
+        assertThat(result.size(), is(5));
     }
 
     @Test
     public void findByMeasurementLocationPointWithinTest() throws Exception {
         List<MeasurementRecord> result = repository.findByLocationPointWithin(new Box(new Point(46.8007638888, 9.775938888), new Point(46.8007638888, 9.775938888)));
-        assertThat(result.size(), is(8));
+        assertThat(result.size(), is(5));
     }
 
     @Test
     public void findByMeasurementLocationNameTest() throws Exception {
         List<MeasurementRecord> result = repository.findByMeasurementLocationName("wan2");
-        assertThat(result.size(), is(8));
+        assertThat(result.size(), is(5));
     }
 
 }

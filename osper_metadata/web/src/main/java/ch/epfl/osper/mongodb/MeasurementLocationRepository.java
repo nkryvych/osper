@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by kryvych on 09/01/15.
  */
-public interface MeasurementLocationRepository extends CrudRepository<MeasurementLocation, BigInteger> {
+public interface MeasurementLocationRepository extends CrudRepository<MeasurementLocation, BigInteger>, MeasurementLocationRepositoryCustom {
 
 
     List<MeasurementLocation> findByLocationWithin(Box b);
@@ -20,6 +20,6 @@ public interface MeasurementLocationRepository extends CrudRepository<Measuremen
 
     MeasurementLocation findByLocationName(String locationName);
 
-    MeasurementLocation findByDeploymentName(String deploymentName);
+    List<MeasurementLocation> findByDeploymentName(String deploymentName);
 
 }

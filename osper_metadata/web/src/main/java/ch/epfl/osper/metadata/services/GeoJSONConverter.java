@@ -26,7 +26,7 @@ public class GeoJSONConverter {
 
     public String convertMeasurementRecords(List<MeasurementRecord> records) {
         try (StringWriter writer = new StringWriter()) {
-            writeJsonStream(writer, records);
+            writeRecordstoJsonStream(writer, records);
             return writer.toString();
         } catch (IOException e) {
             logger.error("Cannot write JSON! " , e);
@@ -34,17 +34,17 @@ public class GeoJSONConverter {
         }
     }
 
-    public void writeJsonStream(StringWriter out, List<MeasurementRecord> messages) throws IOException {
+    protected void writeRecordstoJsonStream(StringWriter out, List<MeasurementRecord> records) throws IOException {
         JsonWriter writer = new JsonWriter(out);
         writer.beginObject();
         writer.name("type").value("FeatureCollection");
         writer.name("features");
-        writeMessagesArray(writer, messages);
+        writeRecordsArray(writer, records);
         writer.endObject();
         writer.close();
     }
 
-    public void writeMessagesArray(JsonWriter writer, List<MeasurementRecord> records) throws IOException {
+    protected void writeRecordsArray(JsonWriter writer, List<MeasurementRecord> records) throws IOException {
         writer.beginArray();
         for (MeasurementRecord record : records) {
             writeRecord(writer, record);
@@ -52,7 +52,7 @@ public class GeoJSONConverter {
         writer.endArray();
     }
 
-    public void writeRecord(JsonWriter writer, MeasurementRecord record) throws IOException {
+    protected void writeRecord(JsonWriter writer, MeasurementRecord record) throws IOException {
         writer.beginObject();
         writer.name("type").value("Feature");
         writer.name("geometry");
@@ -96,10 +96,10 @@ public class GeoJSONConverter {
         writer.endObject();
     }
 
-    public void writePoint(JsonWriter writer, Point point) throws IOException {
+    protected void writePoint(JsonWriter writer, Point point) throws IOException {
         writer.beginArray();
-        writer.value(point.getX());
         writer.value(point.getY());
+        writer.value(point.getX());
         writer.endArray();
     }
 }

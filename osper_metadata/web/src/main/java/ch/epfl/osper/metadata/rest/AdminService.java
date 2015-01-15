@@ -8,12 +8,12 @@ import ch.epfl.osper.metadata.wikireader.MeasurementRecordReader;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.inject.Inject;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -35,31 +35,30 @@ public class AdminService {
         this.persistenceService = persistenceService;
     }
 
-    @RequestMapping(value = "/updateMeasurementLocations", method = RequestMethod.GET)
+    @RequestMapping(value = "/updateMeasurementLocations",  method = RequestMethod.POST)
     public
     @ResponseBody
-    String updateMeasurementLocations() throws FileNotFoundException {
+    String updateMeasurementLocations(@RequestParam(value="file", required=true) MultipartFile file) throws IOException {
 
         System.out.println("AdminService.updateMeasurementLocations");
 
-        InputStream fileStream = new FileInputStream("/Users/kryvych/Projects/osper/osper_metadata/wikireader/src/test/resources/MeasurementLocation.xml");
+//        InputStream fileStream = new FileInputStream("/Users/kryvych/Projects/osper/osper_metadata/wikireader/src/test/resources/MeasurementLocation.xml");
 
-        Set<MeasurementLocation> measurementLocations = measurementLocationReader.readMeasurementLocations(fileStream);
+        Set<MeasurementLocation> measurementLocations = measurementLocationReader.readMeasurementLocations(file.getInputStream());
         persistenceService.writeMeasurementLocations(measurementLocations);
 
         return String.valueOf(measurementLocations.size());
     }
 
-    @RequestMapping(value = "/reloadMeasurementRecords", method = RequestMethod.GET)
+    @RequestMapping(value = "/updateMeasurementLocations",  method = RequestMethod.POST)
     public
     @ResponseBody
-    String reloadMeasurementRecords() throws FileNotFoundException {
+    String updateMeasurementRecords(@RequestParam(value="file", required=true) MultipartFile file) throws IOException {
         System.out.println("AdminService.reloadMeasurementRecords");
-//        updateMeasurementLocations();
 
-        InputStream recordStream = new FileInputStream("/Users/kryvych/Projects/osper/osper_metadata/wikireader/src/test/resources/MeasurementRecord.xml");
+//        InputStream recordStream = new FileInputStream("/Users/kryvych/Projects/osper/osper_metadata/wikireader/src/test/resources/MeasurementRecord.xml");
 
-        Set<MeasurementRecord> records = measurementRecordReader.parseMeasurementRecords(recordStream);
+        Set<MeasurementRecord> records = measurementRecordReader.parseMeasurementRecords(file.getInputStream());
         persistenceService.writeMeasurementRecords(records);
         return String.valueOf(records.size());
 

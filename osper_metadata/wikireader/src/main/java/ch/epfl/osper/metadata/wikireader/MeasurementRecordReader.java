@@ -30,68 +30,6 @@ public class MeasurementRecordReader {
         this.wikiXMLReader = wikiXMLReader;
     }
 
-//    public int readMeasurementRecords(InputStream measurementRecordsInputStream) {
-//        int count = 0;
-//        List<WikiPage> pages = wikiXMLReader.parse(measurementRecordsInputStream);
-//
-//        //remove all records from collection
-//        recordCollection.remove(new BasicDBObject());
-//
-//        for (WikiPage page : pages) {
-//            WikiMesurementRecord record = new WikiMesurementRecord(page);
-//
-//            MeasurementLocation location = cache.getLocation(record.getLocation());
-//            if (location == null) {
-//                logger.info("No location found for " + record.getLocation());
-//                continue;
-//            }
-//
-//            if (record.getObservedProperties().size() == 0) {
-//                logger.info("No observed properties found for " + record.getLocation());
-//                continue;
-//            }
-//
-//            Coordinate coordinate = location.getCoordinate();
-//
-//            BasicDBObject document = new BasicDBObject("title", record.getTitle())
-//                    .append("type", "MeasurementRecord")
-//                    .append("measurementLocation", record.getLocation())
-//                    .append("measurementLocationTitle", location.getTitle())
-//                    .append("samplingFreq", record.getSamplingFreq())
-//                    .append("serialNumber", record.getSerialNo())
-//                    .append("server", record.getServerName())
-//                    .append("dbTableName", record.getDBaseTableName())
-//                    .append("organisation", record.getOrganization())
-//                    .append("fromDate", record.getFromDate() != null ? DATE_FORMAT.format(record.getFromDate()) : null)
-//                    .append("toDate", record.getToDate() != null ? DATE_FORMAT.format(record.getToDate()) : DATE_FORMAT.format(new Date()))
-////                    .append("fromDate", record.getFromDate() != null ? record.getFromDate() : null)
-////                    .append("toDate", record.getToDate() != null ? record.getToDate() : null)
-//                    .append("slopeAngle", location.getSlope())
-//                    .append("aspect", location.getAspect())
-//                    .append("elevation", location.getElevation())
-//                    .append("location", new BasicDBObject("type", "Point")
-//                            .append("coordinates", Lists.newArrayList(coordinate.getLatitude(), coordinate.getLongitude())));
-//
-//            Set<String> properties = new HashSet<String>();
-//            for (ObservedProperty observedProperty : record.getObservedProperties()) {
-//                String name = observedProperty.getName();
-//                if (StringUtils.isNotEmpty(name)) {
-//                    properties.add(observedProperty.getMedia() + " : "  + name);
-//                    cache.addObservedProperty(observedProperty);
-//                }
-//            }
-//
-//            document.append("observedProperty", Lists.newArrayList(properties));
-//            recordCollection.insert(document);
-//            count++;
-//            if ((count % 500) == 0) {
-//                logger.info("Processed " + count + " measurement records");
-//            }
-//        }
-//
-//
-//        return count;
-//    }
 
     public Set<MeasurementRecord> parseMeasurementRecords(InputStream measurementRecordsInputStream) {
         Set<MeasurementRecord> result = Sets.newHashSet();
@@ -103,7 +41,7 @@ public class MeasurementRecordReader {
             WikiMesurementRecord record = new WikiMesurementRecord(page);
 
             if (record.getObservedProperties().size() == 0) {
-                logger.info("No observed properties found for " + record.getLocation());
+                logger.info("No observed properties found for " + record.getTitle());
                 continue;
             }
 

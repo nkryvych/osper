@@ -17,7 +17,11 @@ public class WikiMesurementLocation extends WikiPageProxy {
     }
 
     public String getDeployment() {
-        return getPropertyValue("|Deployment");
+        String deploymentName = getPropertyValue("|DeploymentName");
+        if(StringUtils.isEmpty(deploymentName)) {
+            deploymentName = getPropertyValue("|Deployment");
+        }
+        return deploymentName;
     }
 
     public String getLocation() {

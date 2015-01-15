@@ -38,15 +38,17 @@ public class MetadataController {
         this.converter = converter;
     }
 
-    @RequestMapping(value="/sensors", method=RequestMethod.POST)
-    public @ResponseBody
+    @RequestMapping(value = "/sensors", method = RequestMethod.POST)
+    public
+    @ResponseBody
     String getSensors(@RequestBody Coordinate jo) {
 
         return jo.toString();
     }
 
     @RequestMapping(value = "/measurementRecords", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody
+    public
+    @ResponseBody
     String getMeasurementRecords(MetaDataQuery query) {
         System.out.println("query = " + query);
 
@@ -56,7 +58,8 @@ public class MetadataController {
     }
 
     @RequestMapping(value = "/measurementRecords/measurementLocation/{measurementLocationName}", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody
+    public
+    @ResponseBody
     String getMeasurementRecordsForMeasurementLocation(@PathVariable String measurementLocationName) {
         System.out.println("measurementLocationName = " + measurementLocationName);
         List<MeasurementRecord> allMeasurementRecords = queryService.findMeasurementRecordsByMeasurementLocation(measurementLocationName);
@@ -65,17 +68,16 @@ public class MetadataController {
     }
 
     @RequestMapping(value = "/measurementLocations", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody
+    public
+    @ResponseBody
     String getMeasurementLocations(MetaDataQuery query) {
 
         System.out.println("query = " + query);
 
-        if (query.hasValidBoundingBox()) {
-            List<MeasurementLocation> result = persistenceService.findLocationPointsWithinBox(query.getBoundingBox());
-            Gson gson = new Gson();
+        List<MeasurementLocation> result = queryService.findAllMeasurementLocations();
+        Gson gson = new Gson();
 
-            return gson.toJson(result);
-        }
-        return "Wrong query";
+        return gson.toJson(result);
+
     }
 }

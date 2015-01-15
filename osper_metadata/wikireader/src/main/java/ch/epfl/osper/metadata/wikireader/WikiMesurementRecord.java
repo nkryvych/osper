@@ -2,6 +2,8 @@ package ch.epfl.osper.metadata.wikireader;
 
 import ch.epfl.osper.metadata.model.ObservedProperty;
 import ch.epfl.osper.metadata.wikireader.wikimodel.WikiPage;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -12,10 +14,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by kryvych on 11/12/14.
@@ -73,21 +72,31 @@ public class WikiMesurementRecord extends WikiPageProxy {
             return result;
         }
 
-        String[] dbParameterNames = getPropertyValue("|DBaseParameterName").split(",");
-        String[] measurementMedias = getPropertyValue("|MeasurementMedia").split(",");
-        String[] measuredParameters = getPropertyValue("|MeasuredParameter").split(",");
-        String[] units = getPropertyValue("|Unit").split(", ");
+        Splitter splitter = Splitter.on(',').omitEmptyStrings().trimResults();
 
-        if (dbParameterNames.length !=  measurementMedias.length
-                || dbParameterNames.length !=  measuredParameters.length
-                || dbParameterNames.length !=  units.length) {
-            logger.info("Cannot create observed properties (not all fields present) for MeasurementRecord " + getTitle());
+        ArrayList<String> dbParameterNames = Lists.newArrayList(splitter.split(getPropertyValue("|DBaseParameterName")));
+        ArrayList<String> measuredParameters = Lists.newArrayList(splitter.split(getPropertyValue("|MeasuredParameter")));
+        if(dbParameterNames.size() < measuredParameters.size()) {
+            logger.info("Cannot create observed properties (not all measured properties map to DB) for MeasurementRecord " + getTitle());
             return result;
         }
 
-        for (int i = 0; i < dbParameterNames.length; i++) {
-            result.add(new ObservedProperty(measuredParameters[i].trim(), measurementMedias[i].trim()
-                    , units[i].trim(), dbParameterNames[i].trim()));
+        ArrayList<String> measurementMedias = new ArrayList(Collections.nCopies(measuredParameters.size(), "NA"));
+        ArrayList<String> units = new ArrayList(Collections.nCopies(measuredParameters.size(), "NA"));
+
+        int count = 0;
+        for (String media : splitter.split(getPropertyValue("|MeasurementMedia"))) {
+            measurementMedias.add(count++, media);
+        }
+
+        count = 0;
+        for (String media : splitter.split(getPropertyValue("|Unit"))) {
+            units.add(count++, media);
+        }
+
+        for (int i = 0; i < measuredParameters.size(); i++) {
+            result.add(new ObservedProperty(measuredParameters.get(i), measurementMedias.get(i)
+                    , units.get(i), dbParameterNames.get(i)));
         }
 
         return result;
