@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -18,13 +19,13 @@ import java.util.List;
  * Created by kryvych on 13/01/15.
  */
 @Service
-public class GeoJSONConverter {
+public class GeoJSONConverter<T extends MeasurementRecord> {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-    public String convertMeasurementRecords(List<MeasurementRecord> records) {
+    public String convertMeasurementRecords(Collection<T> records) {
         try (StringWriter writer = new StringWriter()) {
             writeRecordstoJsonStream(writer, records);
             return writer.toString();
@@ -34,7 +35,7 @@ public class GeoJSONConverter {
         }
     }
 
-    protected void writeRecordstoJsonStream(StringWriter out, List<MeasurementRecord> records) throws IOException {
+    protected void writeRecordstoJsonStream(StringWriter out, Collection<T> records) throws IOException {
         JsonWriter writer = new JsonWriter(out);
         writer.beginObject();
         writer.name("type").value("FeatureCollection");
@@ -44,15 +45,15 @@ public class GeoJSONConverter {
         writer.close();
     }
 
-    protected void writeRecordsArray(JsonWriter writer, List<MeasurementRecord> records) throws IOException {
+    protected void writeRecordsArray(JsonWriter writer, Collection<T> records) throws IOException {
         writer.beginArray();
-        for (MeasurementRecord record : records) {
+        for (T record : records) {
             writeRecord(writer, record);
         }
         writer.endArray();
     }
 
-    protected void writeRecord(JsonWriter writer, MeasurementRecord record) throws IOException {
+    protected void writeRecord(JsonWriter writer, T record) throws IOException {
         writer.beginObject();
         writer.name("type").value("Feature");
         writer.name("geometry");
@@ -67,13 +68,14 @@ public class GeoJSONConverter {
         //Properties
         writer.beginObject();
         writer.name("id").value(record.getId());
-        writer.name("title").value(record.getTitle());
+        writer.name("measurementLocationTitle").value(record.getMeasurementLocation().getTitle());
         writer.name("measurementLocation").value(record.getMeasurementLocationName());
         writer.name("samplingFreq").value(record.getSamplingFrequency());
         writer.name("serialNumber").value(record.getSerialNumber());
         writer.name("server").value(record.getServer());
         writer.name("dbTableName").value(record.getDbTableName());
         writer.name("organisation").value(record.getOrganisation());
+        writer.name("e-mail").value(record.getEmail());
         writer.name("fromDate").value(DATE_FORMAT.format(record.getFromDate() == null ? new Date() : record.getFromDate()));
         writer.name("toDate").value(DATE_FORMAT.format(record.getToDate() == null ? new Date() : record.getToDate()));
         writer.name("aspect").value(record.getMeasurementLocation().getAspect());

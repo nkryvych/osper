@@ -4,6 +4,7 @@ import ch.epfl.osper.metadata.model.MeasurementRecord;
 import ch.epfl.osper.metadata.wikireader.wikimodel.MediaWikiXMLReader;
 import ch.epfl.osper.metadata.wikireader.wikimodel.WikiPage;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,10 +46,17 @@ public class MeasurementRecordReader {
                 continue;
             }
 
+            if (StringUtils.isEmpty(record.getDBaseTableName())) {
+                logger.info("No db table name " + record.getTitle());
+                continue;
+            }
+
+
             MeasurementRecord measurementRecord = MeasurementRecord.getBuilder().measurementLocatioName(record.getLocation())
                     .title(record.getTitle())
                     .samplingFrequency(record.getSamplingFreq())
                     .serialNumber(record.getSerialNo())
+                    .email(record.getPersonResponsible())
                     .server(record.getServerName())
                     .dbTableName(record.getDBaseTableName())
                     .organisation(record.getOrganization())

@@ -26,4 +26,5 @@ public interface LocationAccessMeasurementRecordRepository {
 
     List<MeasurementRecord> findForMetaDataQuery(MetaDataQuery metaDataQuery);
 
+    List<MeasurementLocation> findMeasurementLocationsForMetaDataQuery(MetaDataQuery metaDataQuery);
 }

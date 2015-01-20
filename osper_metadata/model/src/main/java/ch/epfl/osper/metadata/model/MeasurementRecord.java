@@ -37,13 +37,14 @@ public class MeasurementRecord {
 
     private String server;
     private String organisation;
+    private String email;
 
     private Collection<ObservedProperty> observedProperties;
 
     private String dbTableName;
 
 
-    private MeasurementRecord(String wikiId, String title, String measurementLocationName, String serialNumber, Date fromDate, Date toDate, String samplingFrequency, String server, String organisation, Collection<ObservedProperty> observedProperties, String dbTableName) {
+    private MeasurementRecord(String wikiId, String title, String measurementLocationName, String serialNumber, Date fromDate, Date toDate, String samplingFrequency, String server, String organisation, String email, Collection<ObservedProperty> observedProperties, String dbTableName) {
         this.wikiId = wikiId;
         this.title = title;
         this.measurementLocationName = measurementLocationName;
@@ -53,11 +54,12 @@ public class MeasurementRecord {
         this.samplingFrequency = samplingFrequency;
         this.server = server;
         this.organisation = organisation;
+        this.email = email;
         this.observedProperties = observedProperties;
         this.dbTableName = dbTableName;
     }
 
-    private MeasurementRecord() {
+    protected MeasurementRecord() {
     }
 
     public static Builder getBuilder() {
@@ -148,6 +150,10 @@ public class MeasurementRecord {
                 '}';
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public static class Builder {
         private String wikiId;
         private String measurementLocationName;
@@ -160,6 +166,7 @@ public class MeasurementRecord {
         private Date fromDate;
         private Date toDate;
         private String title;
+        private String email;
 
         public Builder wikiId(String wikiId) {
             this.wikiId = wikiId;
@@ -212,11 +219,16 @@ public class MeasurementRecord {
         }
 
         public MeasurementRecord createMeasurementRecord() {
-            return new MeasurementRecord(wikiId, title, measurementLocationName, serialNumber, fromDate, toDate, samplingFrequency, server, organisation, observedProperties, dbTableName);
+            return new MeasurementRecord(wikiId, title, measurementLocationName, serialNumber, fromDate, toDate, samplingFrequency, server, organisation, email, observedProperties, dbTableName);
         }
 
         public Builder title(String title) {
             this.title = title;
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.email = email;
             return this;
         }
     }

@@ -31,4 +31,8 @@
         <constructor-arg ref="requestFactory"/>
     </bean>
 
+    <!--<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">-->
+        <!--&lt;!&ndash;  the maximum size of an uploaded file in bytes &ndash;&gt;-->
+        <!--<property name="maxUploadSize" value="5000000"/>-->
+    <!--</bean>-->
 </beans>

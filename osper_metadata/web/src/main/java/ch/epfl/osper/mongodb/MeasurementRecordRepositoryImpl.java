@@ -80,6 +80,19 @@ public class MeasurementRecordRepositoryImpl implements LocationAccessMeasuremen
         return operations.find(query, MeasurementRecord.class);
     }
 
+    @Override
+    public List<MeasurementLocation> findMeasurementLocationsForMetaDataQuery(MetaDataQuery metaDataQuery) {
+        Criteria criteria = buildMultiParameterCriteria(metaDataQuery);
+        Query query = new Query(criteria);
+
+        Set<String> observedProperties = metaDataQuery.getObservedProperties();
+        if(!observedProperties.isEmpty()) {
+            TextCriteria textCriteria = TextCriteria.forDefaultLanguage().
+                    matchingAny(observedProperties.toArray(new String[observedProperties.size()]));
+            query.addCriteria(textCriteria);
+        }
+        return operations.find(query, MeasurementLocation.class);
+    }
 
     protected Criteria buildMultiParameterCriteria(MetaDataQuery metaDataQuery) {
         List<Criteria> criteriaList = new ArrayList<Criteria>();
@@ -88,11 +101,11 @@ public class MeasurementRecordRepositoryImpl implements LocationAccessMeasuremen
             criteriaList.add(criteria);
         }
         if (metaDataQuery.hasValidFromDate()) {
-            Criteria criteria = where("fromDate").gte(metaDataQuery.getFromDateParsed());
+            Criteria criteria = where("fromDate").lte(metaDataQuery.getFromDateParsed());
             criteriaList.add(criteria);
         }
         if(metaDataQuery.hasValidToDate()) {
-            Criteria criteria = where("toDate").lte(metaDataQuery.getToDateParsed());
+            Criteria criteria = where("toDate").gte(metaDataQuery.getToDateParsed());
             criteriaList.add(criteria);
         }
 

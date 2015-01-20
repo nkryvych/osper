@@ -1,5 +1,6 @@
 package ch.epfl.osper.metadata.rest;
 
+import ch.epfl.osper.metadata.dto.MeasurementRecordDTO;
 import ch.epfl.osper.metadata.model.Coordinate;
 import ch.epfl.osper.metadata.model.MeasurementLocation;
 import ch.epfl.osper.metadata.model.MeasurementLocationCache;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -52,7 +54,7 @@ public class MetadataController {
     String getMeasurementRecords(MetaDataQuery query) {
         System.out.println("query = " + query);
 
-        List<MeasurementRecord> allMeasurementRecords = queryService.findMeasurementRecords(query);
+        Collection<MeasurementRecordDTO> allMeasurementRecords = queryService.findMeasurementRecords(query);
 
         return converter.convertMeasurementRecords(allMeasurementRecords);
     }
@@ -76,8 +78,18 @@ public class MetadataController {
 
         List<MeasurementLocation> result = queryService.findAllMeasurementLocations();
         Gson gson = new Gson();
-
         return gson.toJson(result);
+
+    }
+
+    @RequestMapping(value = "measurementRecords/position", method = RequestMethod.GET, produces = "application/json")
+    public
+    @ResponseBody
+    String getMeasurementRecordsForLocation(@RequestParam String lat, @RequestParam String lon) {
+
+        Collection<MeasurementRecordDTO> result = queryService.findMeasurementRecordByLocation(lat, lon);
+
+        return converter.convertMeasurementRecords(result);
 
     }
 }

@@ -40,4 +40,9 @@ public class MeasurementRecordRepositoryTest {
         assertThat(result.size(), is(5));
     }
 
+    @Test
+    public void findByLocationPoint() throws Exception {
+        List<MeasurementRecord> result = repository.findByLocationPoint(new Point(46.8007638888, 9.775938888));
+        assertThat(result.size(), is(5));
+    }
 }

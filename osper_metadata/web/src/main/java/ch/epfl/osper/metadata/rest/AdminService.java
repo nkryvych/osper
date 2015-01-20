@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.inject.Inject;
-import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Set;
 
 /**
@@ -38,27 +40,29 @@ public class AdminService {
     @RequestMapping(value = "/updateMeasurementLocations",  method = RequestMethod.POST)
     public
     @ResponseBody
-    String updateMeasurementLocations(@RequestParam(value="file", required=true) MultipartFile file) throws IOException {
+    String updateMeasurementLocations(@RequestParam(value="file", required=true) MultipartFile file) throws FileNotFoundException {
 
         System.out.println("AdminService.updateMeasurementLocations");
 
-//        InputStream fileStream = new FileInputStream("/Users/kryvych/Projects/osper/osper_metadata/wikireader/src/test/resources/MeasurementLocation.xml");
 
-        Set<MeasurementLocation> measurementLocations = measurementLocationReader.readMeasurementLocations(file.getInputStream());
+        InputStream fileStream = new FileInputStream("/Users/kryvych/Projects/osper/osper_metadata/wikireader/src/test/resources/MeasurementLocation.xml");
+
+        Set<MeasurementLocation> measurementLocations = measurementLocationReader.readMeasurementLocations(fileStream);
         persistenceService.writeMeasurementLocations(measurementLocations);
 
         return String.valueOf(measurementLocations.size());
     }
 
-    @RequestMapping(value = "/updateMeasurementLocations",  method = RequestMethod.POST)
+    @RequestMapping(value = "/reloadMeasurementRecords", method = RequestMethod.GET)
     public
     @ResponseBody
-    String updateMeasurementRecords(@RequestParam(value="file", required=true) MultipartFile file) throws IOException {
+    String reloadMeasurementRecords(@RequestParam String fileName) throws FileNotFoundException {
         System.out.println("AdminService.reloadMeasurementRecords");
 
 //        InputStream recordStream = new FileInputStream("/Users/kryvych/Projects/osper/osper_metadata/wikireader/src/test/resources/MeasurementRecord.xml");
+        InputStream recordStream = new FileInputStream(fileName);
 
-        Set<MeasurementRecord> records = measurementRecordReader.parseMeasurementRecords(file.getInputStream());
+        Set<MeasurementRecord> records = measurementRecordReader.parseMeasurementRecords(recordStream);
         persistenceService.writeMeasurementRecords(records);
         return String.valueOf(records.size());
 

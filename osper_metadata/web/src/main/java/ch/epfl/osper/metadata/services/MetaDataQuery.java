@@ -26,6 +26,9 @@ public class MetaDataQuery {
     private double maxLat = Double.NaN;
     private double maxLon = Double.NaN;
 
+    private double lat = Double.NaN;
+    private double lon = Double.NaN;
+
     private Date fromDateParsed;
     private Date toDateParsed;
 
@@ -48,16 +51,12 @@ public class MetaDataQuery {
         this.maxLon = maxLon;
     }
 
-
-    public List<double[]> getBoxAsArray() {
-        List<double[]> box = new ArrayList<>();
-        box.add(new double[]{minLat, minLon}); //Starting coordinate
-        box.add(new double[]{maxLat, maxLon}); // Ending coordinate
-        return box;
-    }
-
     public Box getBoundingBox() {
         return new Box(new Point(minLat, minLon), new Point(maxLat, maxLon));
+    }
+
+    public Point getLocationPoint() {
+        return new Point(lat, lon);
     }
 
     public String getToDate() {
@@ -88,6 +87,10 @@ public class MetaDataQuery {
 
     public boolean hasValidBoundingBox() {
         return !Double.isNaN(minLat) && !Double.isNaN(minLon) && !Double.isNaN(maxLat) && !Double.isNaN(maxLon);
+    }
+
+    public boolean hasValidLocation() {
+        return !Double.isNaN(lat) && !Double.isNaN(lon);
     }
 
     public String getMeasurementLocationName() {

@@ -16,9 +16,9 @@
     </parent>
 
     <modules>
-        <module>web</module>
-        <module>wikireader</module>
         <module>model</module>
+        <module>wikireader</module>
+        <module>web</module>
     </modules>
 
     <properties>
