@@ -1,6 +1,5 @@
 package ch.epfl.osper.metadata.rest;
 
-import ch.epfl.osper.metadata.dto.MeasurementRecordDTO;
 import ch.epfl.osper.metadata.model.Coordinate;
 import ch.epfl.osper.metadata.model.MeasurementLocation;
 import ch.epfl.osper.metadata.model.MeasurementLocationCache;
@@ -54,7 +53,18 @@ public class MetadataController {
     String getMeasurementRecords(MetaDataQuery query) {
         System.out.println("query = " + query);
 
-        Collection<MeasurementRecordDTO> allMeasurementRecords = queryService.findMeasurementRecords(query);
+        Collection<MeasurementRecord> allMeasurementRecords = queryService.findMeasurementRecords(query, false);
+
+        return converter.convertMeasurementRecords(allMeasurementRecords);
+    }
+
+    @RequestMapping(value = "/measurementRecords/unfolded", method = RequestMethod.GET, produces = "application/json")
+    public
+    @ResponseBody
+    String getMeasurementRecordsUnfolded(MetaDataQuery query) {
+        System.out.println("query = " + query);
+
+        Collection<MeasurementRecord> allMeasurementRecords = queryService.findMeasurementRecords(query, true);
 
         return converter.convertMeasurementRecords(allMeasurementRecords);
     }
@@ -87,7 +97,7 @@ public class MetadataController {
     @ResponseBody
     String getMeasurementRecordsForLocation(@RequestParam String lat, @RequestParam String lon) {
 
-        Collection<MeasurementRecordDTO> result = queryService.findMeasurementRecordByLocation(lat, lon);
+        Collection<MeasurementRecord> result = queryService.findMeasurementRecordByLocation(lat, lon);
 
         return converter.convertMeasurementRecords(result);
 

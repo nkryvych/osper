@@ -1,5 +1,7 @@
 package ch.epfl.osper.metadata.model;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
@@ -43,8 +45,10 @@ public class MeasurementRecord {
 
     private String dbTableName;
 
+    private RelativePosition relativePosition;
 
-    private MeasurementRecord(String wikiId, String title, String measurementLocationName, String serialNumber, Date fromDate, Date toDate, String samplingFrequency, String server, String organisation, String email, Collection<ObservedProperty> observedProperties, String dbTableName) {
+
+    private MeasurementRecord(String wikiId, String title, String measurementLocationName, String serialNumber, Date fromDate, Date toDate, String samplingFrequency, String server, String organisation, String email, Collection<ObservedProperty> observedProperties, String dbTableName, RelativePosition relativePosition) {
         this.wikiId = wikiId;
         this.title = title;
         this.measurementLocationName = measurementLocationName;
@@ -57,6 +61,7 @@ public class MeasurementRecord {
         this.email = email;
         this.observedProperties = observedProperties;
         this.dbTableName = dbTableName;
+        this.relativePosition = relativePosition;
     }
 
     protected MeasurementRecord() {
@@ -131,6 +136,10 @@ public class MeasurementRecord {
         this.locationPoint = measurementLocation.getLocationPoint();
     }
 
+    public String getRelativePosition() {
+        return relativePosition == null ? null : relativePosition.getPosition();
+    }
+
     @Override
     public String toString() {
         return "MeasurementRecord{" +
@@ -167,6 +176,7 @@ public class MeasurementRecord {
         private Date toDate;
         private String title;
         private String email;
+        private RelativePosition relativePosition;
 
         public Builder wikiId(String wikiId) {
             this.wikiId = wikiId;
@@ -218,8 +228,13 @@ public class MeasurementRecord {
             return this;
         }
 
+        public Builder relativePosition(String x, String y, String z) {
+            this.relativePosition = new RelativePosition(x, y, z);
+            return this;
+        }
+
         public MeasurementRecord createMeasurementRecord() {
-            return new MeasurementRecord(wikiId, title, measurementLocationName, serialNumber, fromDate, toDate, samplingFrequency, server, organisation, email, observedProperties, dbTableName);
+            return new MeasurementRecord(wikiId, title, measurementLocationName, serialNumber, fromDate, toDate, samplingFrequency, server, organisation, email, observedProperties, dbTableName, relativePosition);
         }
 
         public Builder title(String title) {
@@ -232,4 +247,22 @@ public class MeasurementRecord {
             return this;
         }
     }
+
+    private static class RelativePosition {
+        private String x;
+        private String y;
+        private String z;
+
+        public RelativePosition(String x, String y, String z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        public String getPosition() {
+            return Joiner.on(",").join(Lists.newArrayList(x, y, z));
+        }
+    }
+
+
 }

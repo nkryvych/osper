@@ -81,6 +81,7 @@ public class GeoJSONConverter<T extends MeasurementRecord> {
         writer.name("aspect").value(record.getMeasurementLocation().getAspect());
         writer.name("slopeAngle").value(record.getMeasurementLocation().getSlope());
         writer.name("elevation").value(record.getMeasurementLocation().getElevation());
+        writer.name("relativeCoordinates").value(record.getRelativePosition());
 
         //Observed properties
         writer.name("observedProperties");

@@ -39,9 +39,15 @@ public class QueryMongoDBService {
         this.locationRepository = locationRepository;
     }
 
-    public Collection<MeasurementRecordDTO> findMeasurementRecords(MetaDataQuery metaDataQuery) {
+    public Collection<MeasurementRecord> findMeasurementRecords(MetaDataQuery metaDataQuery, boolean unfolded) {
         //ToDo: method buildDTOs puts all results to memory. If functionality needed implement DB solution
-        return buildDTOs(recordRepository.findForMetaDataQuery(metaDataQuery));
+
+        List<MeasurementRecord> records = recordRepository.findForMetaDataQuery(metaDataQuery);
+        if (unfolded) {
+            return records;
+        }
+        return buildDTOs(records);
+
     }
 
     public List<MeasurementRecord> findMeasurementRecordsByMeasurementLocation(String measurementLocationName) {
@@ -52,7 +58,7 @@ public class QueryMongoDBService {
         return locationRepository.findAllOrderedByDeployment();
     }
 
-    public Collection<MeasurementRecordDTO> findMeasurementRecordByLocation(String lat, String lon) {
+    public Collection<MeasurementRecord> findMeasurementRecordByLocation(String lat, String lon) {
         if (NumberUtils.isNumber(lat) && NumberUtils.isNumber(lon)) {
             List<MeasurementRecord> records = recordRepository.findByLocationPoint(new Point(NumberUtils.createDouble(lat), NumberUtils.createDouble(lon)));
             return buildDTOs(records);
@@ -62,11 +68,11 @@ public class QueryMongoDBService {
         }
     }
 
-    private Collection<MeasurementRecordDTO> buildDTOs(List<MeasurementRecord> records) {
-        Map<String, MeasurementRecordDTO> dbNameToRecord = Maps.newHashMap();
+    private Collection<MeasurementRecord> buildDTOs(List<MeasurementRecord> records) {
+        Map<String, MeasurementRecord> dbNameToRecord = Maps.newHashMap();
         for (MeasurementRecord record : records) {
             if (dbNameToRecord.containsKey(record.getDbTableName())) {
-                MeasurementRecordDTO measurementRecordDTO = dbNameToRecord.get(record.getDbTableName());
+                MeasurementRecordDTO measurementRecordDTO = (MeasurementRecordDTO) dbNameToRecord.get(record.getDbTableName());
                 measurementRecordDTO.addMeasurementRecord(record);
             } else {
                 MeasurementRecordDTO measurementRecordDTO = new MeasurementRecordDTO(record);

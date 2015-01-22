@@ -63,6 +63,7 @@ public class MeasurementRecordReader {
                     .fromDate(record.getFromDate())
                     .toDate(record.getToDate())
                     .observedProperties(record.getObservedProperties())
+                    .relativePosition(record.getRelX(), record.getRelY(), record.getRelZ())
                     .createMeasurementRecord();
 
             count++;
