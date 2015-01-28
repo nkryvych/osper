@@ -32,6 +32,8 @@ public class MetaDataQuery {
     private Date fromDateParsed;
     private Date toDateParsed;
 
+    private boolean onlyPublic = true;
+    private boolean onlyWithData = true;
 
     public void setMinLon(double minLon) {
         this.minLon = minLon;
@@ -101,6 +103,22 @@ public class MetaDataQuery {
         this.measurementLocationName = measurementLocationName;
     }
 
+    public boolean isOnlyPublic() {
+        return onlyPublic;
+    }
+
+    public void setOnlyPublic(boolean onlyPublic) {
+        this.onlyPublic = onlyPublic;
+    }
+
+    public boolean isOnlyWithData() {
+        return onlyWithData;
+    }
+
+    public void setOnlyWithData(boolean onlyWithData) {
+        this.onlyWithData = onlyWithData;
+    }
+
     public boolean hasValidFromDate() {
         if (StringUtils.isNotEmpty(fromDate)) {
             try {
@@ -135,7 +153,7 @@ public class MetaDataQuery {
 
     @Override
     public String toString() {
-        return "MeasurementRecordQuery{" +
+        return "MetaDataQuery{" +
                 "measurementLocationName='" + measurementLocationName + '\'' +
                 ", observedProperties=" + observedProperties +
                 ", fromDate='" + fromDate + '\'' +
@@ -144,6 +162,12 @@ public class MetaDataQuery {
                 ", minLon=" + minLon +
                 ", maxLat=" + maxLat +
                 ", maxLon=" + maxLon +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                ", fromDateParsed=" + fromDateParsed +
+                ", toDateParsed=" + toDateParsed +
+                ", onlyPublic=" + onlyPublic +
+                ", onlyWithData=" + onlyWithData +
                 '}';
     }
 }

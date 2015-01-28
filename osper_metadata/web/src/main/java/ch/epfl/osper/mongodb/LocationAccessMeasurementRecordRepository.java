@@ -3,11 +3,9 @@ package ch.epfl.osper.mongodb;
 import ch.epfl.osper.metadata.model.MeasurementLocation;
 import ch.epfl.osper.metadata.model.MeasurementRecord;
 import ch.epfl.osper.metadata.services.MetaDataQuery;
-import org.springframework.data.geo.Box;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 

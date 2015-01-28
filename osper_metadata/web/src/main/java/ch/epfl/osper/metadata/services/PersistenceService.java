@@ -2,14 +2,17 @@ package ch.epfl.osper.metadata.services;
 
 import ch.epfl.osper.metadata.model.MeasurementLocation;
 import ch.epfl.osper.metadata.model.MeasurementRecord;
+import ch.epfl.osper.metadata.model.VirtualSensor;
 import ch.epfl.osper.mongodb.MeasurementLocationRepository;
 import ch.epfl.osper.mongodb.MeasurementRecordRepository;
+import ch.epfl.osper.mongodb.VirtualSensorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.geo.Box;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -23,11 +26,13 @@ public class PersistenceService {
 
     private MeasurementLocationRepository measurementLocationRepository;
     private MeasurementRecordRepository recordRepository;
+    private VirtualSensorRepository virtualSensorRepository;
 
     @Inject
-    public PersistenceService(MeasurementLocationRepository repository, MeasurementRecordRepository recordRepository) {
+    public PersistenceService(MeasurementLocationRepository repository, MeasurementRecordRepository recordRepository, VirtualSensorRepository virtualSensorRepository) {
         this.measurementLocationRepository = repository;
         this.recordRepository = recordRepository;
+        this.virtualSensorRepository = virtualSensorRepository;
     }
 
     public void writeMeasurementLocations(Set<MeasurementLocation> measurementLocations) {
@@ -35,17 +40,6 @@ public class PersistenceService {
         measurementLocationRepository.save(measurementLocations);
     }
 
-    public List<MeasurementLocation> findLocationsWithinBox(Box box) {
-
-        System.out.println("box = " + box);
-        return measurementLocationRepository.findByLocationWithin(box);
-    }
-
-    public List<MeasurementLocation> findLocationPointsWithinBox(Box box) {
-
-        System.out.println("box = " + box);
-        return measurementLocationRepository.findByLocationPointWithin(box);
-    }
 
     public void writeMeasurementRecords(Set<MeasurementRecord> records) {
         recordRepository.deleteAll();
@@ -53,10 +47,20 @@ public class PersistenceService {
             MeasurementLocation measurementLocation = measurementLocationRepository.findByLocationName(record.getMeasurementLocationName());
             if (measurementLocation != null) {
                 record.setMeasurementLocation(measurementLocation);
+                VirtualSensor sensor = virtualSensorRepository.findOneByName(record.getDbTableName());
+                if (sensor != null) {
+                    record.setPublic(sensor.isPublic());
+                    record.setInGSN(true);
+                }
                 recordRepository.save(record);
             } else {
                 logger.info("No location found for " + record.getMeasurementLocationName());
             }
         }
+    }
+
+    public void writeVirtualSensors(Set<VirtualSensor> sensors) {
+        virtualSensorRepository.deleteAll();
+        virtualSensorRepository.save(sensors);
     }
 }

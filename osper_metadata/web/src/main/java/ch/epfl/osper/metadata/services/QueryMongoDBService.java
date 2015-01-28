@@ -50,6 +50,13 @@ public class QueryMongoDBService {
 
     }
 
+    public Collection<MeasurementRecord> findMeasurementRecordsForVirtualSensor(String dbTableName) {
+
+        List<MeasurementRecord> records = recordRepository.findByDbTableName(dbTableName);
+        return buildDTOs(records);
+
+    }
+
     public List<MeasurementRecord> findMeasurementRecordsByMeasurementLocation(String measurementLocationName) {
         return recordRepository.findByMeasurementLocationName(measurementLocationName);
     }

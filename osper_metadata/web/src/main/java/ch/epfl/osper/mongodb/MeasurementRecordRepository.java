@@ -16,6 +16,7 @@ public interface MeasurementRecordRepository extends LocationAccessMeasurementRe
 
     List<MeasurementRecord> findByLocationPointWithin(Box box);
     List<MeasurementRecord> findByLocationPoint(Point point);
+    List<MeasurementRecord> findByDbTableName(String dbTableName);
 
 
 }

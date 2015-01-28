@@ -55,7 +55,7 @@ public class MetadataController {
 
         Collection<MeasurementRecord> allMeasurementRecords = queryService.findMeasurementRecords(query, false);
 
-        return converter.convertMeasurementRecords(allMeasurementRecords);
+        return converter.convertMeasurementRecords(allMeasurementRecords, false);
     }
 
     @RequestMapping(value = "/measurementRecords/unfolded", method = RequestMethod.GET, produces = "application/json")
@@ -66,7 +66,7 @@ public class MetadataController {
 
         Collection<MeasurementRecord> allMeasurementRecords = queryService.findMeasurementRecords(query, true);
 
-        return converter.convertMeasurementRecords(allMeasurementRecords);
+        return converter.convertMeasurementRecords(allMeasurementRecords, false);
     }
 
     @RequestMapping(value = "/measurementRecords/measurementLocation/{measurementLocationName}", method = RequestMethod.GET, produces = "application/json")
@@ -76,7 +76,17 @@ public class MetadataController {
         System.out.println("measurementLocationName = " + measurementLocationName);
         List<MeasurementRecord> allMeasurementRecords = queryService.findMeasurementRecordsByMeasurementLocation(measurementLocationName);
 
-        return converter.convertMeasurementRecords(allMeasurementRecords);
+        return converter.convertMeasurementRecords(allMeasurementRecords, false);
+    }
+
+@RequestMapping(value = "/measurementRecords/{dbTableName}", method = RequestMethod.GET, produces = "application/json")
+    public
+    @ResponseBody
+    String getMeasurementRecordsForDbTableName(@PathVariable String dbTableName) {
+    System.out.println("dbTableName = " + dbTableName);
+        Collection<MeasurementRecord> allMeasurementRecords = queryService.findMeasurementRecordsForVirtualSensor(dbTableName);
+
+        return converter.convertMeasurementRecords(allMeasurementRecords, true);
     }
 
     @RequestMapping(value = "/measurementLocations", method = RequestMethod.GET, produces = "application/json")
@@ -99,7 +109,7 @@ public class MetadataController {
 
         Collection<MeasurementRecord> result = queryService.findMeasurementRecordByLocation(lat, lon);
 
-        return converter.convertMeasurementRecords(result);
+        return converter.convertMeasurementRecords(result, false);
 
     }
 }

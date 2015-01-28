@@ -47,8 +47,12 @@ public class MeasurementRecord {
 
     private RelativePosition relativePosition;
 
+    private boolean isPublic = true;
 
-    private MeasurementRecord(String wikiId, String title, String measurementLocationName, String serialNumber, Date fromDate, Date toDate, String samplingFrequency, String server, String organisation, String email, Collection<ObservedProperty> observedProperties, String dbTableName, RelativePosition relativePosition) {
+    private boolean inGSN = false;
+
+
+    private MeasurementRecord(String wikiId, String title, String measurementLocationName, String serialNumber, Date fromDate, Date toDate, String samplingFrequency, String server, String organisation, String email, Collection<ObservedProperty> observedProperties, String dbTableName, RelativePosition relativePosition, boolean isPublic) {
         this.wikiId = wikiId;
         this.title = title;
         this.measurementLocationName = measurementLocationName;
@@ -140,6 +144,22 @@ public class MeasurementRecord {
         return relativePosition == null ? null : relativePosition.getPosition();
     }
 
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    public boolean isInGSN() {
+        return inGSN;
+    }
+
+    public void setInGSN(boolean inGSN) {
+        this.inGSN = inGSN;
+    }
+
     @Override
     public String toString() {
         return "MeasurementRecord{" +
@@ -177,6 +197,7 @@ public class MeasurementRecord {
         private String title;
         private String email;
         private RelativePosition relativePosition;
+        private boolean isPublic;
 
         public Builder wikiId(String wikiId) {
             this.wikiId = wikiId;
@@ -234,7 +255,7 @@ public class MeasurementRecord {
         }
 
         public MeasurementRecord createMeasurementRecord() {
-            return new MeasurementRecord(wikiId, title, measurementLocationName, serialNumber, fromDate, toDate, samplingFrequency, server, organisation, email, observedProperties, dbTableName, relativePosition);
+            return new MeasurementRecord(wikiId, title, measurementLocationName, serialNumber, fromDate, toDate, samplingFrequency, server, organisation, email, observedProperties, dbTableName, relativePosition, isPublic);
         }
 
         public Builder title(String title) {
@@ -244,6 +265,11 @@ public class MeasurementRecord {
 
         public Builder email(String email) {
             this.email = email;
+            return this;
+        }
+
+        public Builder isPublic(boolean isPublic) {
+            this.isPublic = isPublic;
             return this;
         }
     }
@@ -260,7 +286,10 @@ public class MeasurementRecord {
         }
 
         public String getPosition() {
-            return Joiner.on(",").join(Lists.newArrayList(x, y, z));
+            if (x != null && y != null && z != null) {
+                return Joiner.on(",").join(Lists.newArrayList(x, y, z));
+            }
+            return "";
         }
     }
 

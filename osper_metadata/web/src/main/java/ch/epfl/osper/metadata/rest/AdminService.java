@@ -1,7 +1,9 @@
 package ch.epfl.osper.metadata.rest;
 
+import ch.epfl.osper.metadata.gsnimport.GsnCsvImport;
 import ch.epfl.osper.metadata.model.MeasurementLocation;
 import ch.epfl.osper.metadata.model.MeasurementRecord;
+import ch.epfl.osper.metadata.model.VirtualSensor;
 import ch.epfl.osper.metadata.services.PersistenceService;
 import ch.epfl.osper.metadata.wikireader.MeasurementLocationReader;
 import ch.epfl.osper.metadata.wikireader.MeasurementRecordReader;
@@ -30,11 +32,15 @@ public class AdminService {
     private MeasurementRecordReader measurementRecordReader;
 
     private PersistenceService persistenceService;
+
+    private GsnCsvImport gsnCsvImport;
+
     @Inject
-    public AdminService(MeasurementLocationReader measurementLocationReader, MeasurementRecordReader measurementRecordReader, PersistenceService persistenceService) {
+    public AdminService(MeasurementLocationReader measurementLocationReader, MeasurementRecordReader measurementRecordReader, PersistenceService persistenceService, GsnCsvImport gsnCsvImport) {
         this.measurementLocationReader = measurementLocationReader;
         this.measurementRecordReader = measurementRecordReader;
         this.persistenceService = persistenceService;
+        this.gsnCsvImport = gsnCsvImport;
     }
 
     @RequestMapping(value = "/updateMeasurementLocations",  method = RequestMethod.POST)
@@ -65,6 +71,21 @@ public class AdminService {
         Set<MeasurementRecord> records = measurementRecordReader.parseMeasurementRecords(recordStream);
         persistenceService.writeMeasurementRecords(records);
         return String.valueOf(records.size());
+
+
+    }
+
+    @RequestMapping(value = "/reloadVirtualSensors", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    String reloadVirtualSensors(@RequestParam String fileName) throws FileNotFoundException {
+
+        System.out.println("AdminService.reloadVirtualSensors");
+
+        Set<VirtualSensor> virtualSensors = gsnCsvImport.readSensors(fileName);
+        persistenceService.writeVirtualSensors(virtualSensors);
+
+        return String.valueOf(virtualSensors.size());
 
 
     }

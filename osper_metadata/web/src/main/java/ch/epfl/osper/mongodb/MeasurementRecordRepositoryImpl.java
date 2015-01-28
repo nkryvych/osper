@@ -46,7 +46,7 @@ public class MeasurementRecordRepositoryImpl implements LocationAccessMeasuremen
             Criteria criteria = where("fromDate").gte(from);
             andCriteriaList.add(criteria);
         }
-        if( to != null) {
+        if (to != null) {
             Criteria criteria = where("toDate").lte(to);
             andCriteriaList.add(criteria);
         }
@@ -72,9 +72,9 @@ public class MeasurementRecordRepositoryImpl implements LocationAccessMeasuremen
         Query query = new Query(criteria);
 
         Set<String> observedProperties = metaDataQuery.getObservedProperties();
-        if(!observedProperties.isEmpty()) {
+        if (!observedProperties.isEmpty()) {
             TextCriteria textCriteria = TextCriteria.forDefaultLanguage().
-            matchingAny(observedProperties.toArray(new String[observedProperties.size()]));
+                    matchingAny(observedProperties.toArray(new String[observedProperties.size()]));
             query.addCriteria(textCriteria);
         }
         return operations.find(query, MeasurementRecord.class);
@@ -86,7 +86,7 @@ public class MeasurementRecordRepositoryImpl implements LocationAccessMeasuremen
         Query query = new Query(criteria);
 
         Set<String> observedProperties = metaDataQuery.getObservedProperties();
-        if(!observedProperties.isEmpty()) {
+        if (!observedProperties.isEmpty()) {
             TextCriteria textCriteria = TextCriteria.forDefaultLanguage().
                     matchingAny(observedProperties.toArray(new String[observedProperties.size()]));
             query.addCriteria(textCriteria);
@@ -104,18 +104,27 @@ public class MeasurementRecordRepositoryImpl implements LocationAccessMeasuremen
             Criteria criteria = where("fromDate").lte(metaDataQuery.getFromDateParsed());
             criteriaList.add(criteria);
         }
-        if(metaDataQuery.hasValidToDate()) {
+        if (metaDataQuery.hasValidToDate()) {
             Criteria criteria = where("toDate").gte(metaDataQuery.getToDateParsed());
             criteriaList.add(criteria);
         }
 
-        Criteria result = new Criteria();
-        if(!criteriaList.isEmpty()) {
-            result.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
+        if (metaDataQuery.isOnlyPublic()) {
+            Criteria criteria = where("isPublic").is(Boolean.TRUE);
+            criteriaList.add(criteria);
         }
 
+        if (metaDataQuery.isOnlyWithData()) {
+            Criteria criteria = where("inGSN").is(Boolean.TRUE);
+            criteriaList.add(criteria);
+        }
 
+        Criteria result = new Criteria();
+        if (!criteriaList.isEmpty()) {
+            result.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
+        }
         return result;
+
     }
 
 }
