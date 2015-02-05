@@ -2,6 +2,7 @@ package ch.epfl.osper.metadata.services;
 
 import ch.epfl.osper.metadata.model.MeasurementRecord;
 import ch.epfl.osper.metadata.model.ObservedProperty;
+import com.google.common.collect.Sets;
 import com.google.gson.stream.JsonWriter;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Created by kryvych on 13/01/15.
@@ -29,9 +31,12 @@ public class GeoJSONConverter<T extends MeasurementRecord> {
 
     private final Properties configuration;
 
+    private final TaxonomyResolver taxonomyResolver;
+
     @Inject
-    public GeoJSONConverter(Properties configuration) {
+    public GeoJSONConverter(Properties configuration, TaxonomyResolver taxonomyResolver) {
         this.configuration = configuration;
+        this.taxonomyResolver = taxonomyResolver;
     }
 
     public String convertMeasurementRecords(Collection<T> records, boolean detailed) {
@@ -90,6 +95,7 @@ public class GeoJSONConverter<T extends MeasurementRecord> {
         } else {
             writeShort(writer, record);
         }
+        writer.name("wikiLink").value(configuration.getProperty("wiki.server") + record.getMeasurementLocation().getTitle());
         writer.endObject();
 
         writer.endObject();
@@ -99,9 +105,8 @@ public class GeoJSONConverter<T extends MeasurementRecord> {
 
         writer.name("observed_properties");
         writer.beginArray();
-        for (ObservedProperty observedProperty : record.getObservedProperties()) {
-            writer.value(observedProperty.getMedia() + " : " + observedProperty.getName());
-        }
+
+        writeObservedProperties(writer, record);
         writer.endArray();
         writer.name("deployment").value(record.getMeasurementLocation().getDeploymentName());
         writer.name("server").value(record.getServer());
@@ -113,8 +118,8 @@ public class GeoJSONConverter<T extends MeasurementRecord> {
 
         writer.name("fromDate").value(DATE_FORMAT.format(record.getFromDate() == null ? new Date() : record.getFromDate()));
         writer.name("toDate").value(DATE_FORMAT.format(record.getToDate() == null ? new Date() : record.getToDate()));
-        writer.name("sensor_link")
-                .value(configuration.getProperty("metadata.server") + "/metadata/measurementRecords/" + record.getDbTableName());
+        writer.name("sensorLink")
+                .value(configuration.getProperty("metadata.server") + "metadata/measurementRecords/" + record.getDbTableName());
 
 
     }
@@ -135,9 +140,7 @@ public class GeoJSONConverter<T extends MeasurementRecord> {
 //        writer.name("server").value(record.getServer());
         writer.name("observed_properties");
         writer.beginArray();
-        for (ObservedProperty observedProperty : record.getObservedProperties()) {
-            writer.value(observedProperty.getMedia() + " : " + observedProperty.getName());
-        }
+        writeObservedProperties(writer, record);
         writer.endArray();
 
         writer.name("aspect").value(record.getMeasurementLocation().getAspect());
@@ -148,8 +151,20 @@ public class GeoJSONConverter<T extends MeasurementRecord> {
         writer.name("deployed").value(buildDeploymentDatesString(record.getFromDate(), record.getToDate()));
 
         writer.name("dataLink").value(configuration.getProperty("gsn.server"));
-        writer.name("wikiLink").value(configuration.getProperty("wiki.server") + record.getMeasurementLocation().getTitle());
 
+    }
+
+    private void writeObservedProperties(JsonWriter writer, T record) throws IOException {
+        Set<String> terms = Sets.newHashSet();
+        for (ObservedProperty property : record.getObservedProperties()) {
+            String term = taxonomyResolver.getTermForColumnName(property.getColumnName());
+            if (StringUtils.isNotEmpty(term) && !term.equals("NA")) {
+                terms.add(term);
+            }
+        }
+        for (String term : terms) {
+            writer.value(term);
+        }
     }
 
     protected void writePoint(JsonWriter writer, Point point) throws IOException {

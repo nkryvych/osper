@@ -2,9 +2,11 @@ package ch.epfl.osper.metadata.services;
 
 import ch.epfl.osper.metadata.model.MeasurementLocation;
 import ch.epfl.osper.metadata.model.MeasurementRecord;
+import ch.epfl.osper.metadata.model.TaxonomyProperty;
 import ch.epfl.osper.metadata.model.VirtualSensor;
 import ch.epfl.osper.mongodb.MeasurementLocationRepository;
 import ch.epfl.osper.mongodb.MeasurementRecordRepository;
+import ch.epfl.osper.mongodb.TaxonomyRepository;
 import ch.epfl.osper.mongodb.VirtualSensorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,12 +29,14 @@ public class PersistenceService {
     private MeasurementLocationRepository measurementLocationRepository;
     private MeasurementRecordRepository recordRepository;
     private VirtualSensorRepository virtualSensorRepository;
+    private TaxonomyRepository taxonomyRepository;
 
     @Inject
-    public PersistenceService(MeasurementLocationRepository repository, MeasurementRecordRepository recordRepository, VirtualSensorRepository virtualSensorRepository) {
+    public PersistenceService(MeasurementLocationRepository repository, MeasurementRecordRepository recordRepository, VirtualSensorRepository virtualSensorRepository, TaxonomyRepository taxonomyRepository) {
         this.measurementLocationRepository = repository;
         this.recordRepository = recordRepository;
         this.virtualSensorRepository = virtualSensorRepository;
+        this.taxonomyRepository = taxonomyRepository;
     }
 
     public void writeMeasurementLocations(Set<MeasurementLocation> measurementLocations) {
@@ -62,5 +66,10 @@ public class PersistenceService {
     public void writeVirtualSensors(Set<VirtualSensor> sensors) {
         virtualSensorRepository.deleteAll();
         virtualSensorRepository.save(sensors);
+    }
+
+    public void writeTaxonomy(Set<TaxonomyProperty> properties) {
+        taxonomyRepository.deleteAll();
+        taxonomyRepository.save(properties);
     }
 }

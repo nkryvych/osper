@@ -3,8 +3,10 @@ package ch.epfl.osper.metadata.rest;
 import ch.epfl.osper.metadata.gsnimport.GsnCsvImport;
 import ch.epfl.osper.metadata.model.MeasurementLocation;
 import ch.epfl.osper.metadata.model.MeasurementRecord;
+import ch.epfl.osper.metadata.model.TaxonomyProperty;
 import ch.epfl.osper.metadata.model.VirtualSensor;
 import ch.epfl.osper.metadata.services.PersistenceService;
+import ch.epfl.osper.metadata.taxonomy.TaxonomyReader;
 import ch.epfl.osper.metadata.wikireader.MeasurementLocationReader;
 import ch.epfl.osper.metadata.wikireader.MeasurementRecordReader;
 import org.springframework.stereotype.Controller;
@@ -35,12 +37,15 @@ public class AdminService {
 
     private GsnCsvImport gsnCsvImport;
 
+    private TaxonomyReader taxonomyReader;
+
     @Inject
-    public AdminService(MeasurementLocationReader measurementLocationReader, MeasurementRecordReader measurementRecordReader, PersistenceService persistenceService, GsnCsvImport gsnCsvImport) {
+    public AdminService(MeasurementLocationReader measurementLocationReader, MeasurementRecordReader measurementRecordReader, PersistenceService persistenceService, GsnCsvImport gsnCsvImport, TaxonomyReader taxonomyReader) {
         this.measurementLocationReader = measurementLocationReader;
         this.measurementRecordReader = measurementRecordReader;
         this.persistenceService = persistenceService;
         this.gsnCsvImport = gsnCsvImport;
+        this.taxonomyReader = taxonomyReader;
     }
 
     @RequestMapping(value = "/updateMeasurementLocations",  method = RequestMethod.POST)
@@ -75,18 +80,18 @@ public class AdminService {
 
     }
 
-    @RequestMapping(value = "/reloadVirtualSensors", method = RequestMethod.GET)
+    @RequestMapping(value = "/reloadTaxonomy", method = RequestMethod.GET)
     public
     @ResponseBody
-    String reloadVirtualSensors(@RequestParam String fileName) throws FileNotFoundException {
+    String reloadTaxonomy(@RequestParam String fileName) throws FileNotFoundException {
 
         System.out.println("AdminService.reloadVirtualSensors");
 
-        Set<VirtualSensor> virtualSensors = gsnCsvImport.readSensors(fileName);
-        persistenceService.writeVirtualSensors(virtualSensors);
+        Set<TaxonomyProperty> taxonomyProperties = taxonomyReader.readTaxonomy(fileName);
+        persistenceService.writeTaxonomy(taxonomyProperties);
 
-        return String.valueOf(virtualSensors.size());
-
+        return String.valueOf(taxonomyProperties.size());
 
     }
+
 }

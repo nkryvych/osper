@@ -1,7 +1,10 @@
 package ch.epfl.osper.metadata.model;
 
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
@@ -158,6 +161,18 @@ public class MeasurementRecord {
 
     public void setInGSN(boolean inGSN) {
         this.inGSN = inGSN;
+    }
+
+    public Collection<String> getObservedPropertyNames() {
+        return Sets.newHashSet(Collections2.transform(this.observedProperties, new Function<ObservedProperty, String>() {
+            @Override
+            public String apply(ObservedProperty observedProperty) {
+
+                String media = (observedProperty.getMedia().equals("-") || observedProperty.getMedia().equals("NA")) ?
+                        "undefined" : observedProperty.getMedia();
+                return media + " : " + observedProperty.getName();
+            }
+        }));
     }
 
     @Override

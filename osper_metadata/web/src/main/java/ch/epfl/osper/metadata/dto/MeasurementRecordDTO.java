@@ -3,6 +3,8 @@ package ch.epfl.osper.metadata.dto;
 import ch.epfl.osper.metadata.model.MeasurementLocation;
 import ch.epfl.osper.metadata.model.MeasurementRecord;
 import ch.epfl.osper.metadata.model.ObservedProperty;
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Sets;
 import org.springframework.data.geo.Point;
 
@@ -13,7 +15,7 @@ import java.util.Set;
 /**
  * Created by kryvych on 20/01/15.
  */
-public class MeasurementRecordDTO extends MeasurementRecord{
+public class MeasurementRecordDTO extends MeasurementRecord {
 
     private MeasurementRecord record;
 
@@ -32,10 +34,10 @@ public class MeasurementRecordDTO extends MeasurementRecord{
         if (!this.record.getDbTableName().equals(record.getDbTableName())) {
             return false;
         }
-        if (fromDate != null &&  record.getFromDate()!=null && this.fromDate.after(record.getFromDate())) {
+        if (fromDate != null && record.getFromDate() != null && this.fromDate.after(record.getFromDate())) {
             this.fromDate = record.getFromDate();
         }
-        if (toDate != null &&  record.getToDate()!=null && this.toDate.before(record.getToDate())) {
+        if (toDate != null && record.getToDate() != null && this.toDate.before(record.getToDate())) {
             this.toDate = record.getToDate();
         }
 
@@ -61,6 +63,18 @@ public class MeasurementRecordDTO extends MeasurementRecord{
 
     public Collection<ObservedProperty> getObservedProperties() {
         return observedProperties;
+    }
+
+    public Collection<String> getObservedPropertyNames() {
+        return Sets.newHashSet(Collections2.transform(this.observedProperties, new Function<ObservedProperty, String>() {
+            @Override
+            public String apply(ObservedProperty observedProperty) {
+
+                String media = (observedProperty.getMedia().equals("-") || observedProperty.getMedia().equals("NA")) ?
+                        "undefined" : observedProperty.getMedia();
+                return media.toLowerCase() + " : " + observedProperty.getName();
+            }
+        }));
     }
 
     public String getDbTableName() {

@@ -1,6 +1,10 @@
 package ch.epfl.osper.metadata.model;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.math.BigInteger;
 
 /**
  * Created by kryvych on 01/12/14.

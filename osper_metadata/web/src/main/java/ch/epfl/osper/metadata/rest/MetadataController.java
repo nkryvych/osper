@@ -39,14 +39,6 @@ public class MetadataController {
         this.converter = converter;
     }
 
-    @RequestMapping(value = "/sensors", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    String getSensors(@RequestBody Coordinate jo) {
-
-        return jo.toString();
-    }
-
     @RequestMapping(value = "/measurementRecords", method = RequestMethod.GET, produces = "application/json")
     public
     @ResponseBody
