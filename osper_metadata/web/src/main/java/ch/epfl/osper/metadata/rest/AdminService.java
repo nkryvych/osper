@@ -74,8 +74,8 @@ public class AdminService {
         InputStream recordStream = new FileInputStream(fileName);
 
         Set<MeasurementRecord> records = measurementRecordReader.parseMeasurementRecords(recordStream);
-        persistenceService.writeMeasurementRecords(records);
-        return String.valueOf(records.size());
+        int count = persistenceService.writeMeasurementRecords(records);
+        return String.valueOf(count);
 
 
     }

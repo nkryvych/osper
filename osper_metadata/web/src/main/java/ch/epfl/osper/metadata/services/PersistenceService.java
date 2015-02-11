@@ -45,8 +45,9 @@ public class PersistenceService {
     }
 
 
-    public void writeMeasurementRecords(Set<MeasurementRecord> records) {
+    public int writeMeasurementRecords(Set<MeasurementRecord> records) {
         recordRepository.deleteAll();
+        int count = 0;
         for (MeasurementRecord record : records) {
             MeasurementLocation measurementLocation = measurementLocationRepository.findByLocationName(record.getMeasurementLocationName());
             if (measurementLocation != null) {
@@ -57,10 +58,12 @@ public class PersistenceService {
                     record.setInGSN(true);
                 }
                 recordRepository.save(record);
+                count++;
             } else {
                 logger.info("No location found for " + record.getMeasurementLocationName());
             }
         }
+        return count;
     }
 
     public void writeVirtualSensors(Set<VirtualSensor> sensors) {

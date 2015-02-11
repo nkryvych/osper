@@ -38,8 +38,13 @@ public class MeasurementRecordReader {
         List<WikiPage> pages = wikiXMLReader.parse(measurementRecordsInputStream);
 
 
+
         for (WikiPage page : pages) {
             WikiMesurementRecord record = new WikiMesurementRecord(page);
+
+            if(StringUtils.isNotEmpty(record.getDBaseTableName()) && record.getDBaseTableName().equals("wannengrat_gupf_oben")) {
+                System.out.println("record = " + record);
+            }
 
             if (record.getObservedProperties().size() == 0) {
                 logger.info("No observed properties found for " + record.getTitle());

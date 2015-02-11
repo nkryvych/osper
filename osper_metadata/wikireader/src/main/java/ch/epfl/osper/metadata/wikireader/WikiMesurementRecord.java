@@ -66,8 +66,7 @@ public class WikiMesurementRecord extends WikiPageProxy {
     public Set<ObservedProperty> getObservedProperties() {
         HashSet<ObservedProperty> result = Sets.newHashSet();
 
-        if (getPropertyValue("|DBaseParameterName") == null || getPropertyValue("|MeasurementMedia") == null
-                || getPropertyValue("|MeasuredParameter") == null || getPropertyValue("|Unit") == null) {
+        if (getPropertyValue("|DBaseParameterName") == null) {
             logger.info("Cannot create observed properties for MeasurementRecord " + getTitle());
             return result;
         }
@@ -75,31 +74,37 @@ public class WikiMesurementRecord extends WikiPageProxy {
         Splitter splitter = Splitter.on(',').omitEmptyStrings().trimResults();
 
         ArrayList<String> dbParameterNames = Lists.newArrayList(splitter.split(getPropertyValue("|DBaseParameterName")));
-        ArrayList<String> measuredParameters = Lists.newArrayList(splitter.split(getPropertyValue("|MeasuredParameter")));
-        if(dbParameterNames.size() < measuredParameters.size()) {
-            logger.info("Cannot create observed properties (not all measured properties map to DB) for MeasurementRecord " + getTitle());
-            return result;
-        }
+//        ArrayList<String> measuredParameters = Lists.newArrayList(splitter.split(getPropertyValue("|MeasuredParameter")));
+//        if(dbParameterNames.size() < measuredParameters.size()) {
+//            logger.info("Cannot create observed properties (not all measured properties map to DB) for MeasurementRecord " + getTitle());
+//            return result;
+//        }
 
-        ArrayList<String> measurementMedias = new ArrayList(Collections.nCopies(measuredParameters.size(), "NA"));
-        ArrayList<String> units = new ArrayList(Collections.nCopies(measuredParameters.size(), "NA"));
+        ArrayList<String> measuredParameters = new ArrayList(Collections.nCopies(dbParameterNames.size(), "unspecified"));
+        ArrayList<String> measurementMedias = new ArrayList(Collections.nCopies(dbParameterNames.size(), "unspecified"));
+        ArrayList<String> units = new ArrayList(Collections.nCopies(dbParameterNames.size(), "unspecified"));
 
-        int count = 0;
-        for (String media : splitter.split(getPropertyValue("|MeasurementMedia"))) {
-            measurementMedias.add(count++, media);
-        }
+        fillParameters(measuredParameters, "|MeasuredParameter");
+        fillParameters(units, "|Unit");
+        fillParameters(measurementMedias, "|MeasurementMedia");
 
-        count = 0;
-        for (String media : splitter.split(getPropertyValue("|Unit"))) {
-            units.add(count++, media);
-        }
-
-        for (int i = 0; i < measuredParameters.size(); i++) {
+        for (int i = 0; i < dbParameterNames.size(); i++) {
             result.add(new ObservedProperty(measuredParameters.get(i), measurementMedias.get(i)
                     , units.get(i), dbParameterNames.get(i)));
         }
 
         return result;
+    }
+
+    private void fillParameters(ArrayList<String> parameters, String type) {
+        Splitter splitter = Splitter.on(',').omitEmptyStrings().trimResults();
+        int count = 0;
+        String propertyValue = getPropertyValue(type);
+        if (propertyValue != null) {
+            for (String parameter : splitter.split(propertyValue)) {
+                parameters.add(count++, parameter);
+            }
+        }
     }
 
     public String getSamplingFreq() {

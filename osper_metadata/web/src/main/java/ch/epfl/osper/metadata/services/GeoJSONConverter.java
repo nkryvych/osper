@@ -177,9 +177,9 @@ public class GeoJSONConverter<T extends MeasurementRecord> {
     protected String buildDeploymentDatesString(Date from, Date to) {
         StringBuilder sb = new StringBuilder();
         sb.append("from ");
-        sb.append(DATE_FORMAT.format(from == null ? "Unspecified " : from));
+        sb.append(from == null ? "Unspecified " : DATE_FORMAT.format(from));
         sb.append(" to ");
-        sb.append(DATE_FORMAT.format(to == null ? "ongoing " : to));
+        sb.append(to == null ? "ongoing " : DATE_FORMAT.format(to));
         return sb.toString();
     }
 //    protected void writeLink(JsonWriter writer)
